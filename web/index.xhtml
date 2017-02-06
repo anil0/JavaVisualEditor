@@ -21,7 +21,7 @@
                         draggable="true" droppable="true" dragdropScope="demo">
                     <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
                     <p:treeNode>
-                        <h:outputText value="#{node}" />
+                        <h:outputText value="#{node}" /> <!--node is the variable above var="node"-->
                     </p:treeNode>
                 </p:tree>
 

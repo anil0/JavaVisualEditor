@@ -38,35 +38,39 @@ public class BlockBean implements Serializable
     @PostConstruct
     public void init() 
     {
-        root1 = new DefaultTreeNode("Root", null);
-        TreeNode node0 = new DefaultTreeNode("Node 0", root1); //data, parent
-        TreeNode node1 = new DefaultTreeNode("Node 1", root1);
-        TreeNode node2 = new DefaultTreeNode("Node 2", root1);
+        root1 = new MyTreeNodeImpl("Root", null);
+        //instead of TreeNode and a type of DefaultTreeNode it is now:
+        IMyTreeNode node0 = new MyTreeNodeImpl("Node 0", root1); //data, parent
+        //test an update node data from new method functionality
+        node0.updateNode("it changed");
+        
+        TreeNode node1 = new MyTreeNodeImpl("Node 1", root1);
+        TreeNode node2 = new MyTreeNodeImpl("Node 2", root1);
          
-        TreeNode node00 = new DefaultTreeNode("Node 0.0", node0); //this becomes child of node0 meaning indented list
-        TreeNode node01 = new DefaultTreeNode("Node 0.1", node0);
+//        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
+//        TreeNode node01 = new MyTreeNodeImpl("Node 0.1", node0);
+//         
+//        TreeNode node10 = new MyTreeNodeImpl("Node 1.0", node1);
+//        TreeNode node11 = new MyTreeNodeImpl("Node 1.1", node1);
+//         
+//        TreeNode node000 = new MyTreeNodeImpl("Node 0.0.0", node00);
+//        TreeNode node001 = new MyTreeNodeImpl("Node 0.0.1", node00);
+//        TreeNode node010 = new MyTreeNodeImpl("Node 0.1.0", node01);
+//         
+//        TreeNode node100 = new MyTreeNodeImpl("Node 1.0.0", node10);
          
-        TreeNode node10 = new DefaultTreeNode("Node 1.0", node1);
-        TreeNode node11 = new DefaultTreeNode("Node 1.1", node1);
+        root2 = new MyTreeNodeImpl("Root2", null);
+        TreeNode item0 = new MyTreeNodeImpl("Item 0", root2);
+        TreeNode item1 = new MyTreeNodeImpl("Item 1", root2);
+        TreeNode item2 = new MyTreeNodeImpl("Item 2", root2);
          
-        TreeNode node000 = new DefaultTreeNode("Node 0.0.0", node00);
-        TreeNode node001 = new DefaultTreeNode("Node 0.0.1", node00);
-        TreeNode node010 = new DefaultTreeNode("Node 0.1.0", node01);
-         
-        TreeNode node100 = new DefaultTreeNode("Node 1.0.0", node10);
-         
-        root2 = new DefaultTreeNode("Root2", null);
-        TreeNode item0 = new DefaultTreeNode("Item 0", root2);
-        TreeNode item1 = new DefaultTreeNode("Item 1", root2);
-        TreeNode item2 = new DefaultTreeNode("Item 2", root2);
-         
-        TreeNode item00 = new DefaultTreeNode("Item 0.0", item0);
+//        TreeNode item00 = new MyTreeNodeImpl("Item 0.0", item0);
         
         //creating a seperate root for my own custom elements
-        root3 = new DefaultTreeNode("Root3", null);
-        TreeNode ifStatement = new DefaultTreeNode("if", root3);
-        TreeNode elseifStatement = new DefaultTreeNode("else if", root3);
-        TreeNode elseStatement = new DefaultTreeNode("else", root3);
+        root3 = new MyTreeNodeImpl("Root3", null);
+        IMyTreeNode ifStatement = new MyTreeNodeImpl("if", root3);
+        TreeNode elseifStatement = new MyTreeNodeImpl("else if", root3);
+        TreeNode elseStatement = new MyTreeNodeImpl("else", root3);
     }
  
     public TreeNode getRoot1() 
@@ -132,28 +136,29 @@ public class BlockBean implements Serializable
      */
     private void refreshRoots() 
     {
-        root1 = new DefaultTreeNode("Root", null);
-        TreeNode node0 = new DefaultTreeNode("Node 0", root1); //data, parent
-        TreeNode node1 = new DefaultTreeNode("Node 1", root1);
-        TreeNode node2 = new DefaultTreeNode("Node 2", root1);
+        root1 = new MyTreeNodeImpl("Root", null);
+        //instead of TreeNode and a type of DefaultTreeNode it is now:
+        IMyTreeNode node0 = new MyTreeNodeImpl("Node 0", root1); //data, parent
+        TreeNode node1 = new MyTreeNodeImpl("Node 1", root1);
+        TreeNode node2 = new MyTreeNodeImpl("Node 2", root1);
          
-        TreeNode node00 = new DefaultTreeNode("Node 0.0", node0); //this becomes child of node0 meaning indented list
-        TreeNode node01 = new DefaultTreeNode("Node 0.1", node0);
-         
-        TreeNode node10 = new DefaultTreeNode("Node 1.0", node1);
-        TreeNode node11 = new DefaultTreeNode("Node 1.1", node1);
-         
-        TreeNode node000 = new DefaultTreeNode("Node 0.0.0", node00);
-        TreeNode node001 = new DefaultTreeNode("Node 0.0.1", node00);
-        TreeNode node010 = new DefaultTreeNode("Node 0.1.0", node01);
-         
-        TreeNode node100 = new DefaultTreeNode("Node 1.0.0", node10);
+//        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
+//        TreeNode node01 = new MyTreeNodeImpl("Node 0.1", node0);
+//         
+//        TreeNode node10 = new MyTreeNodeImpl("Node 1.0", node1);
+//        TreeNode node11 = new MyTreeNodeImpl("Node 1.1", node1);
+//         
+//        TreeNode node000 = new MyTreeNodeImpl("Node 0.0.0", node00);
+//        TreeNode node001 = new MyTreeNodeImpl("Node 0.0.1", node00);
+//        TreeNode node010 = new MyTreeNodeImpl("Node 0.1.0", node01);
+//         
+//        TreeNode node100 = new MyTreeNodeImpl("Node 1.0.0", node10);
         
         //creating a seperate root for my own custom elements
-        root3 = new DefaultTreeNode("Root3", null);
-        TreeNode ifStatement = new DefaultTreeNode("if", root3);
-        TreeNode elseifStatement = new DefaultTreeNode("else if", root3);
-        TreeNode elseStatement = new DefaultTreeNode("else", root3);
+        root3 = new MyTreeNodeImpl("Root3", null);
+        IMyTreeNode ifStatement = new MyTreeNodeImpl("if", root3);
+        TreeNode elseifStatement = new MyTreeNodeImpl("else if", root3);
+        TreeNode elseStatement = new MyTreeNodeImpl("else", root3);
     }
     
 }
