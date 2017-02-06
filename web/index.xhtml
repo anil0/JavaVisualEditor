@@ -33,6 +33,15 @@
                     </p:treeNode>
                 </p:tree>
 
+                <!--add a new tree set for my custom elements-->
+                <p:tree id="tree3" value="#{blockBean.root3}" var="node" selectionMode="single" selection="#{blockBean.selectedNode3}"
+                        draggable="true" droppable="true" dragdropScope="demo">
+                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                    <p:treeNode>
+                        <h:outputText value="#{node}" />
+                    </p:treeNode>
+                </p:tree>
+                                
             </h:panelGrid>
         </h:form>
     </h:body>
