@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Java Visual Editor</title>
+    </h:head>
+    <!--http://www.primefaces.org/showcase/ui/data/tree/dragdrop.xhtml-->
+    <!--This site contains the basic code for showing how to start with drag and drop and treenodes within the primefaces framework-->
+    <h:body>
+        <!--        use this id to reference the form to refresh        -->
+        <h:form id="form">
+            <p:growl id="msgs" showDetail="true" />
+
+            <!--value is the root meaning the elements listed from the blockbean, the event listener handles the drag and drop-->
+            <h:panelGrid columns="3">
+                <p:tree id="tree1" value="#{blockBean.root1}" var="node" selectionMode="single" selection="#{blockBean.selectedNode1}"
+                        draggable="true" droppable="true" dragdropScope="demo">
+                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                    <p:treeNode>
+                        <h:outputText value="#{node}" />
+                    </p:treeNode>
+                </p:tree>
+
+                <p:tree id="tree2" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
+                        draggable="true" droppable="true" dragdropScope="demo">
+                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                    <p:treeNode>
+                        <h:outputText value="#{node}" />
+                    </p:treeNode>
+                </p:tree>
+
+            </h:panelGrid>
+        </h:form>
+    </h:body>
+</html>
+
