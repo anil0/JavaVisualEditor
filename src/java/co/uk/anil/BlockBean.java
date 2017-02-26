@@ -34,6 +34,8 @@ public class BlockBean implements Serializable
     private TreeNode selectedNode1;
     private TreeNode selectedNode2;
     private TreeNode selectedNode3;
+    
+    private String userInput;
      
     @PostConstruct
     public void init() 
@@ -48,23 +50,11 @@ public class BlockBean implements Serializable
         TreeNode node2 = new MyTreeNodeImpl("Node 2", root1);
          
 //        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
-//        TreeNode node01 = new MyTreeNodeImpl("Node 0.1", node0);
-//         
-//        TreeNode node10 = new MyTreeNodeImpl("Node 1.0", node1);
-//        TreeNode node11 = new MyTreeNodeImpl("Node 1.1", node1);
-//         
-//        TreeNode node000 = new MyTreeNodeImpl("Node 0.0.0", node00);
-//        TreeNode node001 = new MyTreeNodeImpl("Node 0.0.1", node00);
-//        TreeNode node010 = new MyTreeNodeImpl("Node 0.1.0", node01);
-//         
-//        TreeNode node100 = new MyTreeNodeImpl("Node 1.0.0", node10);
          
         root2 = new MyTreeNodeImpl("Root2", null);
         TreeNode item0 = new MyTreeNodeImpl("Item 0", root2);
         TreeNode item1 = new MyTreeNodeImpl("Item 1", root2);
         TreeNode item2 = new MyTreeNodeImpl("Item 2", root2);
-         
-//        TreeNode item00 = new MyTreeNodeImpl("Item 0.0", item0);
         
         //creating a seperate root for my own custom elements
         root3 = new MyTreeNodeImpl("Root3", null);
@@ -117,7 +107,17 @@ public class BlockBean implements Serializable
     {
         this.selectedNode3 = selectedNode3;
     }
+
+    public String getUserInput() {
+        return userInput;
+    }
+
+    public void setUserInput(String userInput) {
+        this.userInput = userInput;
+    }
         
+    
+    
     public void onDragDrop(TreeDragDropEvent event) 
     {
         TreeNode dragNode = event.getDragNode();
@@ -143,22 +143,23 @@ public class BlockBean implements Serializable
         TreeNode node2 = new MyTreeNodeImpl("Node 2", root1);
          
 //        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
-//        TreeNode node01 = new MyTreeNodeImpl("Node 0.1", node0);
-//         
-//        TreeNode node10 = new MyTreeNodeImpl("Node 1.0", node1);
-//        TreeNode node11 = new MyTreeNodeImpl("Node 1.1", node1);
-//         
-//        TreeNode node000 = new MyTreeNodeImpl("Node 0.0.0", node00);
-//        TreeNode node001 = new MyTreeNodeImpl("Node 0.0.1", node00);
-//        TreeNode node010 = new MyTreeNodeImpl("Node 0.1.0", node01);
-//         
-//        TreeNode node100 = new MyTreeNodeImpl("Node 1.0.0", node10);
-        
+
         //creating a seperate root for my own custom elements
         root3 = new MyTreeNodeImpl("Root3", null);
-        IMyTreeNode ifStatement = new MyTreeNodeImpl("if", root3);
-        TreeNode elseifStatement = new MyTreeNodeImpl("else if", root3);
+        IMyTreeNode ifStatement = new MyTreeNodeImpl("if( true )", root3);
+        TreeNode elseifStatement = new MyTreeNodeImpl("else if( true )", root3);
         TreeNode elseStatement = new MyTreeNodeImpl("else", root3);
+    }
+    
+    public void editSelectedBlock()
+    {
+        System.out.println("EDITED BLOCK " + getSelectedNode2().toString());
+        System.out.println("THE USERS DATA " + userInput);
+        
+        IMyTreeNode editedBLock = (IMyTreeNode) getSelectedNode2();
+        editedBLock.updateNode(editedBLock.getData() + "( " + userInput + " )");
+        
+        //tests to see whether user input is valid and also valid for the type of block
     }
     
 }

@@ -15,4 +15,12 @@ import org.primefaces.model.TreeNode;
 public interface IMyTreeNode extends TreeNode {
     //new functionality methods
     void updateNode(String data);
+    
+    Type getBlockType();
+    
+    void setBlockType(Type blockType);
+    
+    long getBlockID();
+    
+    void setBlockID(long blockID);
 }

@@ -35,6 +35,10 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     private boolean selectable = true;
     
     private String rowKey;
+    
+    private Type blockType;
+    
+    private long blockID;
 	
 	public MyTreeNodeImpl() {
         this.type = DEFAULT_TYPE;
@@ -55,6 +59,18 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
 			parent.getChildren().add(this);
         }
 	}
+        
+        public MyTreeNodeImpl(long id, Object data, TreeNode parent, Type t ) 
+    {       
+            this.blockID = id;
+            this.blockType = t;
+            this.type = DEFAULT_TYPE;
+            this.data = data;
+            this.children = new TreeNodeChildren(this);
+            if(parent != null) {
+                    parent.getChildren().add(this);
+    }
+    }
 	
 	public MyTreeNodeImpl(String type, Object data, TreeNode parent) {
 		this.type = type;
@@ -188,5 +204,27 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     public void updateNode(String data) {
         setData(data);
     }
+    
+    @Override
+    public Type getBlockType() {
+        return blockType;
+    }
+
+    @Override
+    public void setBlockType(Type blockType) {
+        this.blockType = blockType;
+    }
+    
+    @Override
+    public long getBlockID() 
+    {
+        return blockID;
+    }
+
+    @Override
+    public void setBlockID(long blockID) 
+    {
+        this.blockID = blockID;
+    }    
     
 }

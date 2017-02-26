@@ -16,7 +16,7 @@
             <p:growl id="msgs" showDetail="true" />
 
             <!--value is the root meaning the elements listed from the blockbean, the event listener handles the drag and drop-->
-            <h:panelGrid columns="3">
+            <h:panelGrid columns="5">
                 <p:tree id="tree1" value="#{blockBean.root1}" var="node" selectionMode="single" selection="#{blockBean.selectedNode1}"
                         draggable="true" droppable="true" dragdropScope="demo">
                     <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
@@ -25,13 +25,14 @@
                     </p:treeNode>
                 </p:tree>
 
-                <p:tree id="tree2" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
+<!--                <p:tree id="tree2" value="{blockBean.root2}" var="node" selectionMode="single" selection="{blockBean.selectedNode2}"
                         draggable="true" droppable="true" dragdropScope="demo">
-                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                    <p:ajax event="dragdrop" listener="{blockBean.onDragDrop}" update=":form:msgs" />
                     <p:treeNode>
-                        <h:outputText value="#{node}" />
+                        <h:outputText value="{node}" />
                     </p:treeNode>
-                </p:tree>
+                </p:tree>-->
+                
 
                 <!--add a new tree set for my custom elements-->
                 <p:tree id="tree3" value="#{blockBean.root3}" var="node" selectionMode="single" selection="#{blockBean.selectedNode3}"
@@ -41,8 +42,36 @@
                         <h:outputText value="#{node}" />
                     </p:treeNode>
                 </p:tree>
+                
                                 
             </h:panelGrid>
+            
+            <h3>Basic</h3>
+            <p:tabView styleClass="tabView">
+                <p:tab id="myTab" title="Untitled">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <p:tree id="tree2" styleClass="newJava" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
+                                draggable="true" droppable="true" dragdropScope="demo" >
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </h:panelGrid>
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="Enter the text you want for your edited block"/>
+                        <h:inputText value="#{blockBean.userInput}"/>
+                        <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
+                    </h:panelGrid>
+                </p:tab>
+                <p:tab title="Untitled1">
+                    <h:panelGrid columns="1" cellpadding="5">
+                        <h:outputText value="Francis Ford Coppola's legendary..." /> <!--put this as an embedded treenode tag --> 
+                    </h:panelGrid>
+                </p:tab>
+                
+            </p:tabView>
+            
         </h:form>
     </h:body>
 </html>
