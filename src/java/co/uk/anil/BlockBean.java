@@ -6,6 +6,7 @@
 package co.uk.anil;
 
 import java.io.Serializable;
+import java.util.Iterator;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -160,6 +161,25 @@ public class BlockBean implements Serializable
         editedBLock.updateNode(editedBLock.getData() + "( " + userInput + " )");
         
         //tests to see whether user input is valid and also valid for the type of block
+        //do validation here
+    }
+    
+    public void deleteSelectedBlock()
+    {
+        //use of iterator to stop any concurrent modification errors because deleting element within loop
+        Iterator<TreeNode> treeNodes = getRoot2().getChildren().iterator();
+        while (treeNodes.hasNext()) 
+        {
+           // Use isLeaf() method to check doesn't have childs.
+           TreeNode treeNode = treeNodes.next(); 
+           IMyTreeNode selectedBlock = (IMyTreeNode) getSelectedNode2();
+           
+           if(treeNode.equals(selectedBlock))
+            {
+                System.out.println("TRUE");
+                treeNodes.remove();
+            }
+        }
     }
     
 }

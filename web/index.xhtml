@@ -63,6 +63,9 @@
                         <h:inputText value="#{blockBean.userInput}"/>
                         <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
                     </h:panelGrid>
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:commandButton actionListener="#{blockBean.deleteSelectedBlock()}" value="Delete Selected Block"/>
+                    </h:panelGrid>
                 </p:tab>
                 <p:tab title="Untitled1">
                     <h:panelGrid columns="1" cellpadding="5">
