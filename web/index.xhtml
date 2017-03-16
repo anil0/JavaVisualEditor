@@ -11,6 +11,9 @@
     <!--http://www.primefaces.org/showcase/ui/data/tree/dragdrop.xhtml-->
     <!--This site contains the basic code for showing how to start with drag and drop and treenodes within the primefaces framework-->
     <h:body>
+        <!--get css styles-->
+        <h:outputStylesheet library="css" name="style.css"/>
+        
         <!--        use this id to reference the form to refresh        -->
         <h:form id="form">
             <p:growl id="msgs" showDetail="true" />
@@ -46,6 +49,9 @@
                                 
             </h:panelGrid>
             
+            <!--save button-->
+            <h:commandButton actionListener="#{blockBean.showHierarchy()}" value="Show Class"/>
+            
             <h3>Basic</h3>
             <p:tabView styleClass="tabView">
                 <p:tab id="myTab" title="Untitled">
@@ -62,8 +68,6 @@
                         <h:outputText value="Enter the text you want for your edited block"/>
                         <h:inputText value="#{blockBean.userInput}"/>
                         <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
-                    </h:panelGrid>
-                    <h:panelGrid columns="2" cellpadding="10">
                         <h:commandButton actionListener="#{blockBean.deleteSelectedBlock()}" value="Delete Selected Block"/>
                     </h:panelGrid>
                 </p:tab>

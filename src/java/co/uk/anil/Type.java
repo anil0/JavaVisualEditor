@@ -13,4 +13,6 @@ public enum Type
 {
     LOGIC,
     LOOP,
+    METHOD,
+    DEFAULT
 }

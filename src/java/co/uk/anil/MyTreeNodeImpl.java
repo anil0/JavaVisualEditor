@@ -18,27 +18,27 @@ import org.primefaces.model.TreeNodeChildren;
  */
 public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
 	
-    public static final String DEFAULT_TYPE = "default";
+    public transient static final String DEFAULT_TYPE = "default";
 
-    private String type;
+    private transient String type;
 
     private Object data;
 
     private List<TreeNode> children;
 
-    private MyTreeNodeImpl parent;
+    private transient MyTreeNodeImpl parent;
 
-    private boolean expanded;
+    private transient boolean expanded;
 
-    private boolean selected;
+    private transient boolean selected;
     
-    private boolean selectable = true;
+    private transient boolean selectable = true;
     
-    private String rowKey;
+    private transient String rowKey;
     
     private Type blockType;
     
-    private long blockID;
+    private transient long blockID;
 	
 	public MyTreeNodeImpl() {
         this.type = DEFAULT_TYPE;
@@ -51,75 +51,76 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
         this.data = data;
     }
 
-	public MyTreeNodeImpl(Object data, TreeNode parent) {
+    public MyTreeNodeImpl(Object data, TreeNode parent) 
+    {
 		this.type = DEFAULT_TYPE;
 		this.data = data;
 		this.children = new TreeNodeChildren(this);
-		if(parent != null) {
+		if(parent != null) 
+                {
 			parent.getChildren().add(this);
-        }
-	}
+                }
+    }
         
-        public MyTreeNodeImpl(long id, Object data, TreeNode parent, Type t ) 
+    public MyTreeNodeImpl(long id, Object data, TreeNode parent, Type t ) 
     {       
             this.blockID = id;
             this.blockType = t;
             this.type = DEFAULT_TYPE;
             this.data = data;
             this.children = new TreeNodeChildren(this);
-            if(parent != null) {
+            if(parent != null) 
+            {
                     parent.getChildren().add(this);
+            }
     }
+	
+    public MyTreeNodeImpl(String type, Object data, TreeNode parent) 
+    {
+            this.type = type;
+            this.data = data;
+            this.children = new TreeNodeChildren(this);
+            if(parent != null) 
+            {
+                    parent.getChildren().add(this);
+            }
     }
-	
-	public MyTreeNodeImpl(String type, Object data, TreeNode parent) {
-		this.type = type;
-		this.data = data;
-		this.children = new TreeNodeChildren(this);
-		if(parent != null) {
-			parent.getChildren().add(this);
-        }
-	}
-	
-	public String getType() {
-		return type;
-	}
-	
-	public void setType(String type) {
-		this.type = type;
-	}
-	
-	public Object getData() {
-		return data;
-	}
-	
-	public void setData(Object data) {
-		this.data = data;
-	}
-	
-	public List<TreeNode> getChildren() {
-		return children;
-	}
-	
-	public void setChildren(List<TreeNode> children) {
-		this.children = children;
-	}
-	
-	public TreeNode getParent() {
-		return parent;
-	}
-	
-	public void setParent(TreeNode parent) {
-        this.parent = (MyTreeNodeImpl) parent;
-	}
-	
-	public boolean isExpanded() {
-		return expanded;
-	}
 
-	public void setExpanded(boolean expanded) {
-		this.expanded = expanded;
-	}
+    public String getType() {
+            return type;
+    }
+
+    public void setType(String type) {
+            this.type = type;
+    }
+
+    public Object getData() {
+            return data;
+    }
+
+    public void setData(Object data) {
+            this.data = data;
+    }
+
+    public void setChildren(List<TreeNode> children) {
+            this.children = children;
+    }
+
+    public TreeNode getParent() {
+            return parent;
+    }
+
+    public void setParent(TreeNode parent) {
+    this.parent = (MyTreeNodeImpl) parent;
+    }
+
+    public boolean isExpanded() {
+            return expanded;
+    }
+
+    public void setExpanded(boolean expanded) {
+            this.expanded = expanded;
+    }
 
     public boolean isSelected() {
         return this.selected;
@@ -137,16 +138,16 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
         this.selectable = selectable;
     }
     
-	public int getChildCount() {
-		return children.size();
-	}
-	
-	public boolean isLeaf() {
-		if(children == null)
-			return true;
-		
-		return children.isEmpty();
-	}
+    public int getChildCount() {
+            return children.size();
+    }
+
+    public boolean isLeaf() {
+            if(children == null)
+                    return true;
+
+            return children.isEmpty();
+    }
 
     public String getRowKey() {
         return rowKey;
@@ -156,40 +157,40 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
         this.rowKey = rowKey;
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
-		return result;
-	}
+    @Override
+    public int hashCode() {
+            final int prime = 31;
+            int result = 1;
+            result = prime * result + ((data == null) ? 0 : data.hashCode());
+            return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if(this == obj)
-			return true;
-		if(obj == null)
-			return false;
-		if(getClass() != obj.getClass())
-			return false;
-		
-		MyTreeNodeImpl other = (MyTreeNodeImpl) obj;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		} else if (!data.equals(other.data))
-			return false;
-		
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+            if(this == obj)
+                    return true;
+            if(obj == null)
+                    return false;
+            if(getClass() != obj.getClass())
+                    return false;
 
-	@Override
-	public String toString() {
-		if(data != null)
-			return data.toString();
-		else
-			return super.toString();
-	}	
+            MyTreeNodeImpl other = (MyTreeNodeImpl) obj;
+            if (data == null) {
+                    if (other.data != null)
+                            return false;
+            } else if (!data.equals(other.data))
+                    return false;
+
+            return true;
+    }
+
+    @Override
+    public String toString() {
+            if(data != null)
+                    return data.toString();
+            else
+                    return super.toString();
+    }	
 
     public boolean isPartialSelected() {
         return false;
@@ -226,5 +227,12 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     {
         this.blockID = blockID;
     }    
+
+    @Override
+    public List<TreeNode> getChildren() {
+        return children;
+    }
+    
+    
     
 }
