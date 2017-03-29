@@ -38,17 +38,27 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     
     private Type blockType;
     
+    private List<IMyTreeNode> hierarchy;
+    
     private transient long blockID;
+    
+    private String accessorType;
+    
+    private String returnType;
+    
+    private List<Argument> arguments;
 	
 	public MyTreeNodeImpl() {
         this.type = DEFAULT_TYPE;
         this.children =  new TreeNodeChildren(this);
+        this.hierarchy = new ArrayList<>();
     }
     
     public MyTreeNodeImpl(Object data) {
         this.type = DEFAULT_TYPE;
         this.children = new TreeNodeChildren(this);
         this.data = data;
+        this.hierarchy = new ArrayList<>();
     }
 
     public MyTreeNodeImpl(Object data, TreeNode parent) 
@@ -60,6 +70,7 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
                 {
 			parent.getChildren().add(this);
                 }
+                this.hierarchy = new ArrayList<>();
     }
         
     public MyTreeNodeImpl(long id, Object data, TreeNode parent, Type t ) 
@@ -73,6 +84,7 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
             {
                     parent.getChildren().add(this);
             }
+            this.hierarchy = new ArrayList<>();
     }
 	
     public MyTreeNodeImpl(String type, Object data, TreeNode parent) 
@@ -84,6 +96,7 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
             {
                     parent.getChildren().add(this);
             }
+            this.hierarchy = new ArrayList<>();
     }
 
     public String getType() {
@@ -232,7 +245,54 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     public List<TreeNode> getChildren() {
         return children;
     }
+
+    //composite design pattern, create a hierarchy/group of objects
+    @Override
+    public void add(IMyTreeNode node) {
+        hierarchy.add(node);
+    }
+
+    @Override
+    public void remove(IMyTreeNode node) {
+        hierarchy.remove(node);
+    }
+
+    @Override
+    public List<IMyTreeNode> getHierarchy() {
+        return hierarchy;
+    }
+
+    @Override
+    public String getAccessorType() {
+        return accessorType;
+    }
+
+    @Override
+    public void setAcessorType(String accessor) {
+        this.accessorType = accessor;
+    }
+
+    @Override
+    public List<Argument> getArguments() {
+        return arguments;
+    }
+
+    @Override
+    public void setArguments(List<Argument> arguments) {
+        this.arguments = arguments;
+    }
+
+    @Override
+    public String getReturnType() {
+        return returnType;
+    }
+
+    @Override
+    public void setReturnType(String returnType) {
+        this.returnType = returnType;
+    }
     
+   
     
     
 }

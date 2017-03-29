@@ -12,3 +12,9 @@ and open the template in the editor.
     height: auto; 
     width: auto;
 }
+
+.vertical
+{
+   width: 0px;
+   height: 100%; /* or height in PX */
+} 

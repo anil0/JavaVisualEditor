@@ -14,5 +14,9 @@ public enum Type
     LOGIC,
     LOOP,
     METHOD,
-    DEFAULT
+    DEFAULT,
+    STATEMENT,
+    PRINT,
+    MAIN,
+    METHODCALL
 }

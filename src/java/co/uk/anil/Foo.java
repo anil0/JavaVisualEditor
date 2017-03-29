@@ -10,45 +10,35 @@ package co.uk.anil;
  * @author anil
  */
 class Foo {
-    private String parent;
-    private String node;
-    private long id;
+    private IMyTreeNode parent;
+    private IMyTreeNode node;
 
-    public Foo(String parent, String node, long id) {
+    public Foo(IMyTreeNode parent, IMyTreeNode node) {
         this.parent = parent;
         this.node = node;
-        this.id = id;
+        
     }
 
-    
-
-    public String getParent() {
+    public IMyTreeNode getParent() {
         return parent;
     }
 
-    public void setParent(String parent) {
+    public void setParent(IMyTreeNode parent) {
         this.parent = parent;
     }
 
-    public String getNode() {
+    public IMyTreeNode getNode() {
         return node;
     }
 
-    public void setNode(String node) {
+    public void setNode(IMyTreeNode node) {
         this.node = node;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 
     @Override
     public String toString() {
-        return "Foo{" + "parent=" + parent + ", node=" + node + ", id=" + id + '}';
+        return "Foo{" + "parent=" + parent + ", node=" + node + '}';
     }
     
     

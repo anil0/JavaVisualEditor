@@ -25,5 +25,22 @@ public interface IMyTreeNode extends TreeNode {
     
     void setBlockID(long blockID);
     
-   
+    void add(IMyTreeNode node);
+    
+    void remove(IMyTreeNode node);
+    
+    List<IMyTreeNode> getHierarchy();
+    
+    String getAccessorType();
+    
+    void setAcessorType(String accessor);
+    
+    List<Argument> getArguments();
+    
+    void setArguments(List<Argument> argument);
+     
+    String getReturnType();
+    
+    void setReturnType(String returnType);
+    
 }

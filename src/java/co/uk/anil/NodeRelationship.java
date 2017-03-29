@@ -5,6 +5,7 @@
  */
 package co.uk.anil;
 
+import java.util.Iterator;
 import java.util.List;
 import org.primefaces.model.TreeNode;
 
@@ -13,57 +14,67 @@ import org.primefaces.model.TreeNode;
  * @author anil
  */
 public class NodeRelationship {
-    private TreeNode parent;
-    private int parentLevel;
-    private List<TreeNode> relation;
+    private IMyTreeNode node;
+    private int hierarchyLevel;
 
-    public NodeRelationship() {
+    public NodeRelationship(IMyTreeNode node, int hierarchyLevel) {
+        this.node = node;
+        this.hierarchyLevel = hierarchyLevel;
     }
 
+    public IMyTreeNode getNode() {
+        return node;
+    }
+
+    public void setNode(IMyTreeNode node) {
+        this.node = node;
+    }
+
+    public int getHierarchyLevel() {
+        return hierarchyLevel;
+    }
+
+    public void setHierarchyLevel(int hierarchyLevel) {
+        this.hierarchyLevel = hierarchyLevel;
+    }
     
+    public static boolean contains(List<NodeRelationship> list)
+    {
+        Iterator<NodeRelationship> nodes = list.iterator();
+        while (nodes.hasNext()) 
+        {
+            NodeRelationship treeNode = nodes.next(); 
+            
+            if(treeNode.getNode().getBlockType().equals( Type.METHOD ))
+            {
+                return true;
+            }
+        }
+        
+        return false;
+    }
     
-    public NodeRelationship(TreeNode parent, int parentLevel) {
-        this.parent = parent;
-        this.parentLevel = parentLevel;
+    public static boolean containsMain(List<NodeRelationship> list)
+    {
+        Iterator<NodeRelationship> nodes = list.iterator();
+        while (nodes.hasNext()) 
+        {
+            NodeRelationship treeNode = nodes.next(); 
+            
+            if(treeNode.getNode().getBlockType().equals( Type.MAIN ))
+            {
+                return true;
+            }
+        }
+        
+        return false;
     }
-
-    public TreeNode getParent() {
-        return parent;
-    }
-
-    public void setParent(TreeNode parent) {
-        this.parent = parent;
-    }
-
-    public int getParentLevel() {
-        return parentLevel;
-    }
-
-    public void setParentLevel(int parentLevel) {
-        this.parentLevel = parentLevel;
-    }
-
-    public List<TreeNode> getRelation() {
-        return relation;
-    }
-
-    public void setRelation(List<TreeNode> relation) {
-        this.relation = relation;
-    }
-
-    
-
-    
-    
     
     @Override
-    public String toString() 
-    {
-        return "NodeRelationship" 
-                + "\n\tParent: " + parent 
-                //+ "\t\nChild: " + child
-                + "\n\tRelations: " + relation;
+    public String toString() {
+        return "NodeRelationship{" + "node=" + node + ", hierarchyLevel=" + hierarchyLevel + '}';
     }
+
     
-    
+   
 }
