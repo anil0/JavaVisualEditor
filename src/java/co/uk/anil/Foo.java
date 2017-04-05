@@ -38,7 +38,7 @@ class Foo {
 
     @Override
     public String toString() {
-        return "Foo{" + "parent=" + parent + ", node=" + node + '}';
+        return "Foo{" + "parent=" + parent + " parentID=" + parent.getBlockID() + ", node=" + node + " nodeID=" + node.getBlockID() + '}';
     }
     
     

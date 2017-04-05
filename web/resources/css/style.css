@@ -7,14 +7,131 @@ and open the template in the editor.
     Created on : 08-Mar-2017, 12:56:49
     Author     : anil
 */
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
 
+body{
+    background: #f7f7f7;
+    font-family: 'Open Sans', sans-serif;
+}
+
+.container{
+    width:90%;
+    margin:0 auto;
+    background:white;
+    padding:1em;
+}
 .newJava {
     height: auto; 
     width: auto;
 }
+
+/*.ui-treenode-leaf-icon 
+{
+    width: 0px !important;
+    height: 16px;
+    display: inline-block;
+}*/
+
+.ui-tree
+{
+     /*min-width: 12.5% !important; allow me to override the treenode outer box width*/
+     width: auto;
+    /*border: none; removes the outer border of every box*/
+}
+
+.box
+{
+    height:6em;
+    margin-right: 20px;
+    
+}
+
+.box2
+{
+   min-height:6em;
+   margin-right: 30px;
+   
+}
+
+.box2 .ui-tree
+{
+    width: 20px !important;
+}
+
+.box .ui-treenode-leaf-icon{
+    display: none;
+}
+
+/*.autowrapboxes {
+    margin-left: 0px;
+    background-color: #333333;
+    height: auto; 
+    width: auto;
+}*/
 
 .vertical
 {
    width: 0px;
    height: 100%; /* or height in PX */
 } 
+
+.variables
+{
+    margin-left: 0px;
+    padding: 3px;
+    border:0px none;
+    background: #A55B80;
+    border-radius: 3px;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+    box-shadow: 0px 0px 6px #A55B60;
+}
+
+.logic
+{
+    padding: 3px;
+    border:0px none;
+    background: #5B80A5;
+    border-radius: 3px;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+    box-shadow: 0px 0px 6px #5B80A1;
+}
+
+.loops
+{
+    padding: 3px;
+    border:0px none;
+    background: #5BA55B;
+    border-radius: 3px;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+    box-shadow: 0px 0px 6px #5BA55A;
+}
+
+.text
+{
+    padding: 3px;
+    border:0px none;
+    background: #5BA58C;
+    border-radius: 3px;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+    box-shadow: 0px 0px 6px #5BA58B;
+}
+
+.methods
+{
+    padding: 3px;
+    border:0px none;
+    background: #995BA5;
+    border-radius: 3px;
+    color: #ffffff;
+    text-shadow: 1px 1px 1px #333333;
+    box-shadow: 0px 0px 6px #995BA1;
+}
+
+.test
+{
+    border: 1px solid #666666;
+}

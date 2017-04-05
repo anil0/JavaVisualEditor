@@ -26,7 +26,7 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
 
     private List<TreeNode> children;
 
-    private transient MyTreeNodeImpl parent;
+    private transient TreeNode parent;
 
     private transient boolean expanded;
 
@@ -45,6 +45,10 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     private String accessorType;
     
     private String returnType;
+    
+    private String value;
+    
+    private String name;
     
     private List<Argument> arguments;
 	
@@ -123,9 +127,9 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
             return parent;
     }
 
-    public void setParent(TreeNode parent) {
-    this.parent = (MyTreeNodeImpl) parent;
-    }
+//    public void setIMyTreeNodeParent(IMyTreeNode parent) {
+//        this.parent = parent;
+//    }
 
     public boolean isExpanded() {
             return expanded;
@@ -241,10 +245,11 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
         this.blockID = blockID;
     }    
 
-    @Override
-    public List<TreeNode> getChildren() {
-        return children;
-    }
+    
+//    @Override
+//    public List<IMyTreeNode> getChildren() {
+//        return children;
+//    }
 
     //composite design pattern, create a hierarchy/group of objects
     @Override
@@ -291,6 +296,47 @@ public class MyTreeNodeImpl implements IMyTreeNode, Serializable {
     public void setReturnType(String returnType) {
         this.returnType = returnType;
     }
+
+   
+    @Override
+    public List<TreeNode> getChildren() 
+    {
+        return children;
+    }
+
+//    @Override
+//    public List<IMyTreeNode> getAllChildren() {
+//        return children;
+//    }
+
+    @Override
+    public void setParent(TreeNode tn) {
+        this.parent = tn;
+    }
+
+    @Override
+    public void setValue(String variableValue) {
+        this.value = variableValue;
+    }
+
+    @Override
+    public String getValue() {
+        return this.value;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String getName() {
+        return this.name;
+    }
+    
+    
+    
+    
     
    
     

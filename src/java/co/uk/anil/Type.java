@@ -12,7 +12,16 @@ package co.uk.anil;
 public enum Type 
 {
     LOGIC,
+    IF,
+    ELSEIF,
+    ELSE,
     LOOP,
+    FOR,
+    FOREACH,
+    WHILE,
+    VARIABLE,
+    VARIABLECALL,
+    OBJECT,
     METHOD,
     DEFAULT,
     STATEMENT,

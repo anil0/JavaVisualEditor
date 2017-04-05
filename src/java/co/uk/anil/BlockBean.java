@@ -5,7 +5,7 @@
  */
 package co.uk.anil;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -26,6 +26,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.TreeDragDropEvent;
 import org.primefaces.model.DefaultTreeNode;
@@ -43,16 +44,27 @@ import org.primefaces.model.TreeNode;
 @ViewScoped
 public class BlockBean implements Serializable 
 {
+    private static BlockBean INSTANCE;
+    
     private IMyTreeNode root1;
     private IMyTreeNode root2;
     private IMyTreeNode root3;
     private IMyTreeNode root4;
-    private IMyTreeNode root5;
+    private IMyTreeNode root5;//your methods
+    private IMyTreeNode root6;//your variables
+    private IMyTreeNode root7;//Loops
+    private IMyTreeNode root8;//Methods
+    private IMyTreeNode root9;//variable
+    private IMyTreeNode tempRoot2;
     private IMyTreeNode selectedNode1;
     private IMyTreeNode selectedNode2;
     private IMyTreeNode selectedNode3;
     private IMyTreeNode selectedNode4;
     private IMyTreeNode selectedNode5;
+    private IMyTreeNode selectedNode6;
+    private IMyTreeNode selectedNode7;
+    private IMyTreeNode selectedNode8;
+    private IMyTreeNode selectedNode9;
     
     private String className;
     private String userInput;
@@ -60,32 +72,64 @@ public class BlockBean implements Serializable
     private String methodName;
     private String methodReturnType;
     private String methodAccessorType;
+    private String variableName;
+    private String variableReturnType;
+    private String variableValue;
+    private String forIInitial;
+    private String forICondition;
+    private String forIIncrement;
+    private String forIIncrementValue;
+    private boolean renderForIIncrementValue;
+    private String forICharacter = "i";
+    private boolean firstLoop;
     
     private String argumentType;
     private String argumentValue;
     private List<Argument> arguments = new ArrayList<>();
     private List<IMyTreeNode> methodsList = new ArrayList<>();
+    private List<IMyTreeNode> variablesList = new ArrayList<>();
     
     boolean isSameMethod = false;
+    boolean isSameVariable = false;
     Object sameMethod = null;
     IMyTreeNode item0;
     IMyTreeNode item01;
     IMyTreeNode item02;
     IMyTreeNode dragNode2;
+    IMyTreeNode dropNode2;
     IMyTreeNode tempNode = null;
+    boolean containsIf = false;
+    
+    private String output = "";
+    
+    public List<String> values = new ArrayList<>();
+    private String testValue;
+    
+    
+//    public static BlockBean getInstance()
+//    {
+//        if( INSTANCE == null )
+//        {
+//            INSTANCE = new BlockBean();
+//        }
+//        
+//        return INSTANCE;
+//    }
+   
      
     @PostConstruct
     public void init() 
     {
-
-        root1 = new MyTreeNodeImpl("Root", null);
-        //instead of TreeNode and a type of DefaultTreeNode it is now:
-        IMyTreeNode node0 = new MyTreeNodeImpl(System.nanoTime(), "Node 0", root1, Type.DEFAULT); //data, parent
-        IMyTreeNode node1 = new MyTreeNodeImpl(System.nanoTime(), "Node 1", root1, Type.DEFAULT);
-        IMyTreeNode node2 = new MyTreeNodeImpl(System.nanoTime(), "Node 2", root1, Type.DEFAULT);
+        //getInstance();
+        values.add("");
+//        root1 = new MyTreeNodeImpl("Root", null);
+//        //instead of TreeNode and a type of DefaultTreeNode it is now:
+//        IMyTreeNode node0 = new MyTreeNodeImpl(System.nanoTime(), "Node 0", root1, Type.STATEMENT); //data, parent
+//        IMyTreeNode node1 = new MyTreeNodeImpl(System.nanoTime(), "Node 1", root1, Type.DEFAULT);
+//        IMyTreeNode node2 = new MyTreeNodeImpl(System.nanoTime(), "Node 2", root1, Type.DEFAULT);
 
 //        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
-         
+        //The drop area
         root2 = new MyTreeNodeImpl("Root2", null);
         //TreeNode item0 = new MyTreeNodeImpl(null, root2);
         item0 = new MyTreeNodeImpl("class HelloWorld", root2);
@@ -94,25 +138,50 @@ public class BlockBean implements Serializable
         item0.setExpanded( true );
         
         //creating a seperate root for my own custom elements
+        //LOGIC
         root3 = new MyTreeNodeImpl("Root3", null);
-        IMyTreeNode ifStatement = new MyTreeNodeImpl(System.nanoTime(), "if( true )", root3, Type.LOGIC);
-        IMyTreeNode elseifStatement = new MyTreeNodeImpl(System.nanoTime(), "else if( true )", root3, Type.LOGIC);
-        IMyTreeNode elseStatement = new MyTreeNodeImpl(System.nanoTime(), "else", root3, Type.LOGIC);
+        IMyTreeNode ifStatement = new MyTreeNodeImpl(System.nanoTime(), "if( true )", root3, Type.IF);
+        IMyTreeNode elseifStatement = new MyTreeNodeImpl(System.nanoTime(), "else if( true )", root3, Type.ELSEIF);
+        IMyTreeNode elseStatement = new MyTreeNodeImpl(System.nanoTime(), "else", root3, Type.ELSE);
         
+        //LOOPS
         root4 = new MyTreeNodeImpl("Root4", null);
-        IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root4, Type.METHOD);
-        IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root4, Type.METHOD);
-        IMyTreeNode forLoop = new MyTreeNodeImpl(System.nanoTime(), "For Loop", root4, Type.LOOP);
-        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root4, Type.PRINT);
+//        IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root4, Type.MAIN);
+//        IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root4, Type.METHOD);
+        IMyTreeNode forLoop = new MyTreeNodeImpl(System.nanoTime(), "fori()", root4, Type.FOR);
+//        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root4, Type.PRINT);
+//        IMyTreeNode variable = new MyTreeNodeImpl(System.nanoTime(), "Variable", root4, Type.VARIABLE);
         
         root5 = new MyTreeNodeImpl("Root5", null);
         
         for(IMyTreeNode m: methodsList)
         {
-            String value = m.getData().toString();
+            String value = m.getReturnType() + " " + m.getData().toString();
             
             IMyTreeNode newNode = new MyTreeNodeImpl(System.nanoTime(), value, root5, Type.METHODCALL);
         }
+        
+        root6 = new MyTreeNodeImpl("Root6", null);
+        
+        for(IMyTreeNode v: variablesList)
+        {
+            String value = v.getData().toString();
+            
+            IMyTreeNode newNode = new MyTreeNodeImpl(System.nanoTime(), value, root6, Type.VARIABLECALL);
+        }
+        
+        //TEXT
+        root7 = new MyTreeNodeImpl("Root7", null);
+        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root7, Type.PRINT);
+        
+        //METHODS
+        root8 = new MyTreeNodeImpl("Root8", null);
+        IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root8, Type.MAIN);
+        IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root8, Type.METHOD);
+        
+        //VARIABLE
+        root9 = new MyTreeNodeImpl("Root9", null);
+        IMyTreeNode variable = new MyTreeNodeImpl(System.nanoTime(), "Variable", root9, Type.VARIABLE);
         
         RequestContext context = RequestContext.getCurrentInstance();
         context.execute("PF('classDialogVar').show();"); 
@@ -142,7 +211,29 @@ public class BlockBean implements Serializable
     public IMyTreeNode getRoot5() {
         return root5;
     }
- 
+
+    public IMyTreeNode getRoot6() {
+        return root6;
+    }
+
+    public IMyTreeNode getRoot7() {
+        return root7;
+    }
+
+    public IMyTreeNode getRoot8() {
+        return root8;
+    }
+
+    public IMyTreeNode getRoot9() {
+        return root9;
+    }
+
+    public IMyTreeNode getTempRoot2() {
+        return tempRoot2;
+    }
+    
+    
+    
     public IMyTreeNode getSelectedNode1() 
     {
         return selectedNode1;
@@ -190,6 +281,40 @@ public class BlockBean implements Serializable
     public void setSelectedNode5(IMyTreeNode selectedNode5) {
         this.selectedNode5 = selectedNode5;
     }
+
+    public IMyTreeNode getSelectedNode6() {
+        return selectedNode6;
+    }
+
+    public void setSelectedNode6(IMyTreeNode selectedNode6) {
+        this.selectedNode6 = selectedNode6;
+    }
+
+    public IMyTreeNode getSelectedNode7() {
+        return selectedNode7;
+    }
+
+    public void setSelectedNode7(IMyTreeNode selectedNode7) {
+        this.selectedNode7 = selectedNode7;
+    }
+
+    public IMyTreeNode getSelectedNode8() {
+        return selectedNode8;
+    }
+
+    public void setSelectedNode8(IMyTreeNode selectedNode8) {
+        this.selectedNode8 = selectedNode8;
+    }
+
+    public IMyTreeNode getSelectedNode9() {
+        return selectedNode9;
+    }
+
+    public void setSelectedNode9(IMyTreeNode selectedNode9) {
+        this.selectedNode9 = selectedNode9;
+    }
+    
+    
 
     public String getUserInput() {
         return userInput;
@@ -262,11 +387,13 @@ public class BlockBean implements Serializable
             else
             {
                 System.out.println("was invalid class name try again");
+                FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Please make sure your class name starts with an uppercase letter");
+                FacesContext.getCurrentInstance().addMessage(null, message);
+                
                 RequestContext context = RequestContext.getCurrentInstance();
                 context.execute("PF('classDialogVar').show();"); 
             }
         }
-
     }
 
     public String getMethodParams() {
@@ -276,8 +403,115 @@ public class BlockBean implements Serializable
     public void setMethodParams(String methodParams) {
         this.methodParams = methodParams;
     }
+
+    public String getVariableName() {
+        return variableName;
+    }
+
+    public void setVariableName(String variableName) {
+        this.variableName = variableName;
+    }
+
+    public String getVariableReturnType() {
+        return variableReturnType;
+    }
+
+    public void setVariableReturnType(String variableReturnType) {
+        this.variableReturnType = variableReturnType;
+    }
+
+    public String getVariableValue() {
+        return variableValue;
+    }
+
+    public void setVariableValue(String variableValue) {
+        this.variableValue = variableValue;
+    }
+
+    public List<String> getValues() {
+        return values;
+    }
+
+    public void setValues(List<String> values) {
+        this.values = values;
+    }
+
+    public String getTestValue() {
+        return testValue;
+    }
+
+    public void setTestValue(String testValue) {
+        this.testValue = testValue;
+    }
+
+    public String getOutput() {
+        return output;
+    }
+
+    public void setOutput(String output) {
+        this.output = output;
+    }
+
+    public String getForIInitial() {
+        return forIInitial;
+    }
+
+    public void setForIInitial(String forIInitial) {
+        this.forIInitial = forIInitial;
+    }
+
+    public String getForICondition() {
+        return forICondition;
+    }
+
+    public void setForICondition(String forICondition) {
+        this.forICondition = forICondition;
+    }
+
+    public String getForIIncrement() {
+        return forIIncrement;
+    }
+
+    public void setForIIncrement(String forIIncrement) {
+        this.forIIncrement = forIIncrement;
+    }
+
+    public String getForIIncrementValue() {
+        return forIIncrementValue;
+    }
+
+    public void setForIIncrementValue(String forIIncrementValue) {
+        this.forIIncrementValue = forIIncrementValue;
+    }
+
+    public boolean isRenderForIIncrementValue() {
+        return renderForIIncrementValue;
+    }
+
+    public void setRenderForIIncrementValue(boolean renderForIIncrementValue) {
+        this.renderForIIncrementValue = renderForIIncrementValue;
+    }
+
+    public String getForICharacter() {
+        return forICharacter;
+    }
+
+    public void setForICharacter(String forICharacter) {
+        this.forICharacter = forICharacter;
+    }
     
     
+
+    public void extend()
+    {
+        values.add(testValue);
+        for(String val : values)
+        {
+            System.out.println(val);
+        }
+        System.out.println("-------------------");
+        showMe();
+    }
     
     public void printClassName()
     {
@@ -288,18 +522,39 @@ public class BlockBean implements Serializable
     public void onDragDrop(TreeDragDropEvent event) 
     {       
         System.out.println("started");
-        TreeNode dragNode = event.getDragNode();
-        TreeNode dropNode = event.getDropNode();
+        //TreeNode dragNode = event.getDragNode();
+        //TreeNode dropNode = event.getDropNode();
         dragNode2 = (IMyTreeNode) event.getDragNode();
-        IMyTreeNode dropNode2 = (IMyTreeNode) event.getDropNode();
+        dropNode2 = (IMyTreeNode) event.getDropNode();
         int dropIndex = event.getDropIndex();
         
+//        if(dragNode2.getBlockType().equals(Type.IF))
+//        {
+//            //dropped at parent(dropNode) at position 0 or 1 inside that elemetn
+//            //if the parent doesnt contain an if then you can not drop and else if or else
+//            
+//            System.out.println("dropindex: " + dropIndex);
+//            System.out.println("sorry error cannot drop");
+//            deleteDraggedBlock();
+//            
+//            //if box is empty
+//            if(getRoot2().getChildCount() == 0)
+//            {
+//                refreshRoot2();
+//            }
+//            
+//            refreshRoots(); // refresh initial drag list so you can re drag that element
+//            RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+//        
+//        }
+//        else
+//        {
         //keep list open at all times
-        dragNode.setExpanded(true);
-        dropNode.setExpanded(true);
-        
+        dragNode2.setExpanded(true);
+        dropNode2.setExpanded(true);
+        System.out.println("dropindex: " + dropIndex);
         //System.out.println(dragNode2.getBlockType());
-        
+
         Iterator<TreeNode> treeNodes = getRoot2().getChildren().iterator();
         while (treeNodes.hasNext()) 
         {
@@ -307,16 +562,18 @@ public class BlockBean implements Serializable
            TreeNode treeNode = treeNodes.next(); 
            IMyTreeNode selectedBlock = (IMyTreeNode) getSelectedNode2();
            
-           if( treeNode.equals(item0) )
+           if( treeNode.equals(item0) ) //when the first element is dragged remove the placeholder example
            {
                 final String item01 = "item01";
                 final String item02 = "item02";
 
-                System.out.println("true");
+                System.out.println("true item0 deleted");
                 treeNodes.remove();
            }
            
-            System.out.println("hit the if");
+            
+           
+           //handling the dragged elements setup dialog calls
            if( dragNode2.getBlockType().equals( Type.METHOD ) )//if method
            {
                if(dragNode2.getData().equals("Main Method"))
@@ -331,6 +588,23 @@ public class BlockBean implements Serializable
                    System.out.println("updated");
                    updateMethod(dragNode2);
 
+                   tempRoot2 = getRoot2(); //make copy of root2
+                   
+                   
+                   
+                   //root2 = null; //empty root2
+
+               }
+                
+           }
+           else if( dragNode2.getBlockType().equals( Type.MAIN ) )
+           {
+               if(!dragNode2.getParent().equals(getRoot2()))
+               {
+                   //System.out.println("the method belongs to root2");
+                   System.out.println("main method not in root2 deleteeeee---------------------------------------");
+                   deleteDraggedBlock();
+                   break;
                }
                 
            }
@@ -338,31 +612,50 @@ public class BlockBean implements Serializable
            {
                updateMethodCall(dragNode2);
            }
-        }
-        
-        //is same method exists remove it from screen
-        if(isSameMethod)
-        {
-            //delete from view
-            Iterator<TreeNode> tree = getRoot2().getChildren().iterator();
-            while (tree.hasNext()) 
-            {
-               // Use isLeaf() method to check doesn't have childs.
-               TreeNode treeNode = tree.next(); 
-               IMyTreeNode selectedBlock = (IMyTreeNode) getSelectedNode2();
+           else if( dragNode2.getBlockType().equals( Type.VARIABLE ) )
+           {
+               updateVariable(dragNode2);
+           }
+           else if( dragNode2.getBlockType().equals( Type.ELSEIF ) )
+           {
+               //if else if is dragged on check to see if the tree contains an if, if it doesnt then delete the else if
+                Iterator<IMyTreeNode> treeNodes1 = (Iterator<IMyTreeNode>)(Object)dropNode2.getChildren().iterator();
+                whileBreak:
+                while (treeNodes1.hasNext()) 
+                {
+                   
+                   IMyTreeNode treeNode1 = treeNodes1.next(); 
+                   //IMyTreeNode selectedBlock1 = (IMyTreeNode) getSelectedNode2();
 
+                    System.out.println("treeNode: " + treeNode1);
+                    System.out.println("drop: " + dropNode2);
+                    
+                   //if there is no if in the entire list
+                   if(!treeNode1.equals(item0)) //because item0 doesnt have a type
+                   {
+                       if(treeNode1.getBlockType().equals( Type.IF ))
+                       {
+                           System.out.println("~CONTAINS IF");
+                           containsIf = true;
+                           break whileBreak;
+                       }
+                   }
 
-               //treeNode
-               if(treeNode.getData().equals( sameMethod ))
-               {
-                    System.out.println("TRUE DELETE Duplicate");
-                    tree.remove();
-                    methodsList.remove(sameMethod);
-                    RequestContext.getCurrentInstance().update("form");
-                    refreshRoots();
-                    break;
-               }
-            }
+                }
+                
+                if(!containsIf) //if there is no if, delete the else if
+                {
+                    deleteDraggedBlock();
+                    containsIf = false;
+                }
+                
+                refreshRoots(); // refresh initial drag list so you can re drag that element
+                RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+           }
+           else if( dragNode2.getBlockType().equals( Type.FOR ) )
+           {
+               updateForILoop(dragNode2);
+           }
         }
         
         RequestContext.getCurrentInstance().update("form");
@@ -372,16 +665,12 @@ public class BlockBean implements Serializable
             refreshRoot2();
         }
         
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Dragged " + dragNode.getData(), "Dropped on " + dropNode.getData() + " at " + dropIndex);
+        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Dragged " + dragNode2.getData(), "Dropped on " + dropNode2.getData() + " at " + dropIndex);
         FacesContext.getCurrentInstance().addMessage(null, message);
 
-        System.out.println("refreshed roots");
         refreshRoots(); // refresh initial drag list so you can re drag that element
         RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
-        
-        //quick check
-        
-        
+
     }
 
     /**
@@ -389,23 +678,24 @@ public class BlockBean implements Serializable
      */
     private void refreshRoots() 
     {
-        root1 = new MyTreeNodeImpl("Root", null);
-        //instead of TreeNode and a type of DefaultTreeNode it is now:
-        IMyTreeNode node0 = new MyTreeNodeImpl(System.nanoTime(), "Node 0", root1, Type.DEFAULT); //data, parent
-        IMyTreeNode node1 = new MyTreeNodeImpl(System.nanoTime(), "Node 1", root1, Type.DEFAULT);
-        IMyTreeNode node2 = new MyTreeNodeImpl(System.nanoTime(), "Node 2", root1, Type.DEFAULT);
+//        root1 = new MyTreeNodeImpl("Root", null);
+//        //instead of TreeNode and a type of DefaultTreeNode it is now:
+//        IMyTreeNode node0 = new MyTreeNodeImpl(System.nanoTime(), "Node 0", root1, Type.STATEMENT); //data, parent
+//        IMyTreeNode node1 = new MyTreeNodeImpl(System.nanoTime(), "Node 1", root1, Type.DEFAULT);
+//        IMyTreeNode node2 = new MyTreeNodeImpl(System.nanoTime(), "Node 2", root1, Type.DEFAULT);
          
         //creating a seperate root for my own custom elements
         root3 = new MyTreeNodeImpl("Root3", null);
-        IMyTreeNode ifStatement = new MyTreeNodeImpl(System.nanoTime(), "if( true )", root3, Type.LOGIC);
-        IMyTreeNode elseifStatement = new MyTreeNodeImpl(System.nanoTime(), "else if( true )", root3, Type.LOGIC);
-        IMyTreeNode elseStatement = new MyTreeNodeImpl(System.nanoTime(), "else", root3, Type.LOGIC);
+        IMyTreeNode ifStatement = new MyTreeNodeImpl(System.nanoTime(), "if( true )", root3, Type.IF);
+        IMyTreeNode elseifStatement = new MyTreeNodeImpl(System.nanoTime(), "else if( true )", root3, Type.ELSEIF);
+        IMyTreeNode elseStatement = new MyTreeNodeImpl(System.nanoTime(), "else", root3, Type.ELSE);
         
         root4 = new MyTreeNodeImpl("Root4", null);
-        IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root4, Type.METHOD);
-        IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root4, Type.METHOD);
-        IMyTreeNode forLoop = new MyTreeNodeImpl(System.nanoTime(), "For Loop", root4, Type.LOOP);
-        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root4, Type.PRINT);
+        //IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root4, Type.MAIN);
+        //IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root4, Type.METHOD);
+        IMyTreeNode forLoop = new MyTreeNodeImpl(System.nanoTime(), "fori()", root4, Type.FOR);
+        //IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root4, Type.PRINT);
+        //IMyTreeNode variable = new MyTreeNodeImpl(System.nanoTime(), "Variable", root4, Type.VARIABLE);
         
         RequestContext.getCurrentInstance().update("form");
         root5 = new MyTreeNodeImpl("Root5", null);
@@ -413,8 +703,8 @@ public class BlockBean implements Serializable
         //IMyTreeNode newNode1 = new MyTreeNodeImpl(System.nanoTime(), "hiiiiii", root5, Type.METHODCALL);
         for(IMyTreeNode m: methodsList)
         {
-            String value = m.getData().toString();
-            value = value.substring(0, value.length() - 3) + "( ";
+            String value = m.getReturnType() + " " + m.getName() + "( ";//m.getData().toString();
+            //value = value.substring(0, value.length() - 3);
             Iterator<Argument> arguments = m.getArguments().iterator();
             while (arguments.hasNext()) 
             {
@@ -433,34 +723,161 @@ public class BlockBean implements Serializable
             
             IMyTreeNode newNode = new MyTreeNodeImpl(System.nanoTime(), value, root5, Type.METHODCALL);
             
+        }//end for
+        
+        root6 = new MyTreeNodeImpl("Root6", null);
+        
+        for(IMyTreeNode v: variablesList)
+        {
+            String value = v.getData().toString();
+            IMyTreeNode newNode = new MyTreeNodeImpl(System.nanoTime(), value, root6, Type.VARIABLECALL);
         }
         
+        //TEXT
+        root7 = new MyTreeNodeImpl("Root7", null);
+        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root7, Type.PRINT);
         
+        //METHODS
+        root8 = new MyTreeNodeImpl("Root8", null);
+        IMyTreeNode mainMethod = new MyTreeNodeImpl(System.nanoTime(), "Main Method", root8, Type.MAIN);
+        IMyTreeNode method = new MyTreeNodeImpl(System.nanoTime(), "Method Block", root8, Type.METHOD);
+        
+        //VARIABLE
+        root9 = new MyTreeNodeImpl("Root9", null);
+        IMyTreeNode variable = new MyTreeNodeImpl(System.nanoTime(), "Variable", root9, Type.VARIABLE);
     }
     
     public void refreshRoot2()
     {
         root2 = new MyTreeNodeImpl("Root2", null);
         //TreeNode item0 = new MyTreeNodeImpl(null, root2);
-        TreeNode item0 = new MyTreeNodeImpl("class HelloWorld", root2);
-        TreeNode item01 = new MyTreeNodeImpl("public static void main( String args[] ) ", (IMyTreeNode) item0);
-        TreeNode item02 = new MyTreeNodeImpl("System.out.println( \"Hello World!\" )", (IMyTreeNode) item0);
+        IMyTreeNode item0 = new MyTreeNodeImpl("class HelloWorld", root2);
+        IMyTreeNode item01 = new MyTreeNodeImpl("public static void main( String args[] ) ",  item0);
+        IMyTreeNode item02 = new MyTreeNodeImpl("System.out.println( \"Hello World!\" )",  item0);
         item0.setExpanded( true );
     }
     
     public void showMe()
     {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('TestVar').show();"); 
+    }
+    
+    public String checkTypeForCss(String node)
+    {
+        if( node.equals( "Node 0" ) )
+        {
+            return "test";
+        }
         
-        RequestContext.getCurrentInstance().update("form");
-        refreshRoots();
-//        root5 = new MyTreeNodeImpl("Root5", null);
-//        
-//        for(IMyTreeNode m: methodsList)
+        return "";
+    }
+    
+    public void updateForILoop(IMyTreeNode node)
+    {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('forIDialogVar').show();"); 
+    }
+    
+    public void editForILoop()
+    {
+        //add one letter to current i in the for, so next would be j
+        //int charValue = forICharacter.charAt(0);
+        //String next = String.valueOf( (char) (charValue + 1)); //next == j
+        //forICharacter = next;
+//        Iterator<IMyTreeNode> nodes = (Iterator<IMyTreeNode>)(Object)dropNode2.getChildren().iterator();
+//        while(nodes.hasNext())
 //        {
-//            String value = m.getData().toString();
-//            
-//            IMyTreeNode newNode = new MyTreeNodeImpl(System.nanoTime(), value, root5, Type.METHODCALL);
+//            IMyTreeNode node = nodes.next();
+//
+//            if(!firstLoop)
+//            {
+//                if(dragNode2.getParent().getData().equals(dropNode2.getData()))
+//                {
+//                    //loop is above this one so increment characters
+//                    System.out.println("for loop already there");
+//
+//                    //add one letter to current i in the for, so next would be j
+//                    int charValue = forICharacter.charAt(0);
+//                    String next = String.valueOf( (char) (charValue + 1)); //next == j
+//                    forICharacter = next;
+//                    break;
+//                }
+//            }
 //        }
+        
+        if( forIIncrement != null && forIInitial != null && forICondition != null )
+        {
+            if( forIIncrement.equals("+=") )
+            {
+                dragNode2.updateNode("for( int " +forICharacter+ " = " + forIInitial + "; " + forICondition + "; " + forICharacter + " " + forIIncrement + " " + forIIncrementValue + " )");
+            }
+            else if( !(forIIncrement.equals("+=")) && forIIncrementValue != null )
+            {
+                dragNode2.updateNode("for( int " + forICharacter + " = " + forIInitial + "; " + forICondition + "; " + forICharacter + forIIncrement + " )");
+                forIIncrementValue = "";
+            }
+            else
+            {
+                dragNode2.updateNode("for( int " + forICharacter + " = " + forIInitial + "; " + forICondition + "; " + forICharacter + forIIncrement + " )");
+            }
+        }
+
+        RequestContext.getCurrentInstance().update("form");
+        //firstLoop = true;
+    }
+    
+    
+    public void updateVariable(IMyTreeNode node)
+    {
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('variableDialogVar').show();"); 
+    }
+    
+    public void editVariable()
+    {
+        
+        dragNode2.setReturnType(variableReturnType);
+        dragNode2.setAcessorType("private");
+        dragNode2.setValue(variableValue);
+        dragNode2.setName(variableName);
+        
+        dragNode2.updateNode(variableReturnType + " " + variableName);
+        
+        for (int i = 0; i < variablesList.size(); i++) 
+        {
+            if(dragNode2.getName().equals(variablesList.get(i).getName()))
+            {
+                System.out.println("TWO OF THE SAME VARIABLES");
+                isSameVariable = true;
+                //dragNode2 = null;
+                break;
+            }
+        }
+
+        if(isSameVariable)//two same variables
+        {
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.execute("PF('duplicateVariableVar').show();"); //call variable popup duplicate
+            
+            deleteDraggedBlock();
+            
+            //if box is empty
+            if(getRoot2().getChildCount() == 0)
+            {
+                refreshRoot2();
+            }
+            
+            refreshRoots(); // refresh initial drag list so you can re drag that element
+            RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+            isSameVariable = false;
+        }
+        else
+        {
+            variablesList.add(dragNode2);
+        }
+        
+        refreshRoots(); //refresh here because the popup window appears after initial refresh
     }
     
     public void updateMethod(IMyTreeNode node)
@@ -480,7 +897,7 @@ public class BlockBean implements Serializable
         //remove all characters until ( add the users entered params, then )
         
         String[] data = dragNode2.getData().toString().split("\\("); 
-        String newData = data[0] + "( " + methodParams + " )";
+        String newData = methodName + "( " + methodParams + " )";
         
         dragNode2.updateNode(newData);
         
@@ -489,9 +906,13 @@ public class BlockBean implements Serializable
     
     public void editMethod()
     {
+        String[] data = dragNode2.getData().toString().split("\\("); 
+        String newData = methodName + "( ";// + methodParams + " )";
         
-        dragNode2.updateNode(methodName + "( )");
+        //dragNode2.updateNode(newData);
+        //dragNode2.updateNode(methodName + "( )");
         
+        dragNode2.setName(methodName);
         dragNode2.setAcessorType(methodAccessorType);
         dragNode2.setReturnType(methodReturnType);
         
@@ -500,9 +921,28 @@ public class BlockBean implements Serializable
         dragNode2.setArguments(listCopy);
         arguments.clear();
         
+        Iterator<Argument> arguments = dragNode2.getArguments().iterator();
+        while (arguments.hasNext()) 
+        {
+            // Use isLeaf() method to check doesn't have childs.
+            Argument a = arguments.next(); 
+            if(arguments.hasNext())
+            {
+                newData += a.getType() + " " + a.getValue() + ", ";
+            }
+            else
+            {
+                newData += a.getType() + " " + a.getValue();
+            }
+        }
+        newData += " )";
+        
+        //update name once arguments have been added
+        dragNode2.updateNode(methodReturnType + " " + newData);
+            
         for (int i = 0; i < methodsList.size(); i++) 
         {
-            if(dragNode2.getData().equals(methodsList.get(i).getData()))
+            if(newData.equals(methodsList.get(i).getData()))
             {
                 System.out.println("TWO OF THE SAME METHODSSSSSS");
                 isSameMethod = true;
@@ -510,22 +950,57 @@ public class BlockBean implements Serializable
                 break;
             }
         }
-        
-//        if(isSameMethod) //two of the same methods check
-//        {
-//            sameMethod = dragNode2.getData();
-//            System.out.println("sorry already have this method");
-//            
-//            RequestContext context = RequestContext.getCurrentInstance();
-//            context.execute("PF('duplicateMethodVar').show();");
-//            
-//            refreshRoots();
-//        }
-//        else
-//        {
+
+        if(isSameMethod)//two same methods
+        {
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.execute("PF('duplicateMethodVar').show();");
+            
+            deleteDraggedBlock();
+            
+            //if box is empty
+            if(getRoot2().getChildCount() == 0)
+            {
+                refreshRoot2();
+            }
+            
+            refreshRoots(); // refresh initial drag list so you can re drag that element
+            RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+            isSameMethod = false;
+        }
+        else
+        {
             methodsList.add(dragNode2);
-//        }
+        }
         
+        if(!dragNode2.getParent().equals(getRoot2()))
+        {
+            //System.out.println("the method belongs to root2");
+            System.out.println("method not in root2 deleteeeee---------------------------------------");
+
+            Iterator<IMyTreeNode> nodes1 = methodsList.iterator();
+             while(nodes1.hasNext())
+             {
+                 IMyTreeNode node1 = nodes1.next();
+                 if(dragNode2.getData().equals(node1.getData()))
+                 {
+                     //same method
+                     nodes1.remove();
+                     break;
+                 }
+             }
+
+             deleteDraggedBlock();
+
+             //if box is empty
+             if(getRoot2().getChildCount() == 0)
+             {
+                 refreshRoot2();
+             }
+
+             refreshRoots(); // refresh initial drag list so you can re drag that element
+             RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+        }
         
         refreshRoots(); //refresh here because the popup window appears after initial refresh
         
@@ -540,6 +1015,7 @@ public class BlockBean implements Serializable
         { 
             arguments.add( new Argument(argumentType, argumentValue) ); //type, value
             
+            //successful message box
             RequestContext context = RequestContext.getCurrentInstance();
             context.execute("PF('argsDlg').show();"); 
             
@@ -550,58 +1026,112 @@ public class BlockBean implements Serializable
             //RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
         }   
     }
-    
-    
-    private List<Argument> cloneArgsList()
-    {
-        try
-        {
-            final List<Argument> cloneArgsList = new LinkedList<>();
-            for( Argument arg : arguments )
-            {
-                Argument a = (Argument) arg.clone();
-                cloneArgsList.add( a );
-            }
 
-            return cloneArgsList;
-        }
-        catch( CloneNotSupportedException e )
-        {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-    
     public void editSelectedBlock()
     {
-        System.out.println("EDITED BLOCK " + getSelectedNode2().toString());
-        System.out.println("THE USERS DATA " + userInput);
-        
-       
-//        RequestContext context = RequestContext.getCurrentInstance();
-//        context.execute("PF('methodDialogVar').show();");
-//
+        if(getSelectedNode2() != null)
+        {
+            if(userInput != null && !(userInput.isEmpty()))
+            {
+                System.out.println("selectedNode2: " + getSelectedNode2());
+                System.out.println("EDITED BLOCK " + getSelectedNode2().toString());
+                System.out.println("THE USERS DATA " + userInput);
 
-        IMyTreeNode editedBLock = (IMyTreeNode) getSelectedNode2();
-        
-        if(editedBLock.getBlockType().equals( Type.LOGIC ))
-        {
-            editedBLock.updateNode("if( " + userInput + " )");
-        }
-        else if(editedBLock.getBlockType().equals( Type.PRINT ))
-        {
-            editedBLock.updateNode(userInput);
+
+        //        RequestContext context = RequestContext.getCurrentInstance();
+        //        context.execute("PF('methodDialogVar').show();");
+        //
+
+                IMyTreeNode editedBLock = (IMyTreeNode) getSelectedNode2();
+
+                //before allowing the update to take place, validate the userInput if it is an actual condition
+
+                if(editedBLock.getBlockType().equals( Type.IF ))
+                {
+                    editedBLock.updateNode("if( " + userInput + " )");
+                }
+                else if(editedBLock.getBlockType().equals( Type.ELSEIF ))
+                {
+                    editedBLock.updateNode("else if( " + userInput + " )");
+                }
+                else if(editedBLock.getBlockType().equals( Type.ELSE ))
+                {
+                    editedBLock.updateNode("else");
+                }
+                else if(editedBLock.getBlockType().equals( Type.PRINT ))
+                {
+                    editedBLock.updateNode("print ( " + userInput + " )");
+                }
+                else if(editedBLock.getBlockType().equals( Type.METHOD ))
+                {
+                    System.out.println("was a method");
+                    System.out.println("Method name: " + methodName);
+                    //editedBLock.updateNode(className);
+                }
+
+                RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+                //tests to see whether user input is valid and also valid for the type of block
+                //do validation here
+            }
+            
         }
         else
         {
-            System.out.println("was a method");
-            System.out.println("Method name: " + methodName);
+            RequestContext.getCurrentInstance().update("form");
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error", "Please enter a value before editing");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            RequestContext.getCurrentInstance().update("form");
+        }
+    }
+    
+    public void deleteDraggedBlock()
+    {
+        //only deletes top level parents, needs to do recursion check to children also.
+        
+        //use of iterator to stop any concurrent modification errors because deleting element within loop
+        Iterator<IMyTreeNode> treeNodes = (Iterator<IMyTreeNode>)(Object)getRoot2().getChildren().iterator();
+        while (treeNodes.hasNext()) 
+        {
+           // Use isLeaf() method to check doesn't have childs.
+           IMyTreeNode treeNode = treeNodes.next(); 
+           IMyTreeNode selectedBlock = (IMyTreeNode) getSelectedNode2();
+           
+           
+           //treeNode
+           if(treeNode.equals(dragNode2))
+            {
+                System.out.println("TRUE");
+                treeNodes.remove();
+
+                break;
+            }
+           
+           getAllDraggedChildrenRemove((List<IMyTreeNode>) (Object) treeNode.getChildren(), selectedBlock ); //get all children and repeat
+           
         }
         
-        RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
-        //tests to see whether user input is valid and also valid for the type of block
-        //do validation here
+    }
+    
+    private void getAllDraggedChildrenRemove(List<IMyTreeNode> children, IMyTreeNode selectedBlock) //used for deleting blocks
+    {
+        
+        Iterator<IMyTreeNode> treeNodes = (Iterator<IMyTreeNode>) children.iterator();
+        while (treeNodes.hasNext()) 
+        {
+           
+           IMyTreeNode treeNode = treeNodes.next(); 
+           
+           if(treeNode.equals(dragNode2))
+           {
+               System.out.println("Found and removed");
+               treeNodes.remove();
+
+               break;
+           }
+           
+           getAllDraggedChildrenRemove((List<IMyTreeNode>) (Object) treeNode.getChildren(), selectedBlock );
+        }
+
     }
     
     public void deleteMainBlock()
@@ -640,9 +1170,69 @@ public class BlockBean implements Serializable
            //treeNode
            if(treeNode.equals(selectedBlock))
             {
-                System.out.println("TRUE");
-                treeNodes.remove();
-                break;
+                if( selectedBlock.getBlockType().equals(Type.VARIABLE) )
+                {
+                    System.out.println("TRUE");
+                    treeNodes.remove();
+
+                    //remove same method
+                    Iterator<IMyTreeNode> nodes1 = variablesList.iterator();
+                    while(nodes1.hasNext())
+                    {
+                        IMyTreeNode node1 = nodes1.next();
+                        if(selectedBlock.getData().equals(node1.getData()))
+                        {
+                            //same method
+                            nodes1.remove();
+                        }
+                    }
+
+                    //if box is empty
+                    if(getRoot2().getChildCount() == 0)
+                    {
+                        refreshRoot2();
+                    }
+
+                    refreshRoots(); // refresh initial drag list so you can re drag that element
+                    RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+
+                    break;
+                }
+                else if(selectedBlock.getBlockType().equals(Type.METHOD))
+                {
+                    System.out.println("TRUE");
+                    treeNodes.remove();
+
+                    //remove same method
+                    Iterator<IMyTreeNode> nodes1 = methodsList.iterator();
+                    while(nodes1.hasNext())
+                    {
+                        IMyTreeNode node1 = nodes1.next();
+                        if(selectedBlock.getData().equals(node1.getData()))
+                        {
+                            //same method
+                            nodes1.remove();
+                        }
+                    }
+
+                    //if box is empty
+                    if(getRoot2().getChildCount() == 0)
+                    {
+                        refreshRoot2();
+                    }
+
+                    refreshRoots(); // refresh initial drag list so you can re drag that element
+                    RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+
+                    break;
+                }
+                else
+                {
+                    System.out.println("TRUE");
+                    treeNodes.remove();
+                    break;
+                }
+                
             }
            
            getAllChildrenRemove((List<IMyTreeNode>) (Object) treeNode.getChildren(), selectedBlock ); //get all children and repeat
@@ -656,7 +1246,7 @@ public class BlockBean implements Serializable
         }
     }
     
-    private void getAllChildrenRemove(List<IMyTreeNode> children, IMyTreeNode selectedBlock) 
+    private void getAllChildrenRemove(List<IMyTreeNode> children, IMyTreeNode selectedBlock) //used for deleting blocks
     {
         
         Iterator<IMyTreeNode> treeNodes = (Iterator<IMyTreeNode>) children.iterator();
@@ -669,41 +1259,43 @@ public class BlockBean implements Serializable
            {
                System.out.println("Found and removed");
                treeNodes.remove();
+               break;
            }
            
            getAllChildrenRemove((List<IMyTreeNode>) (Object) treeNode.getChildren(), selectedBlock );
         }
-        
-//        for(IMyTreeNode childNode : children)
-//        {
-//            getAllChildrenRemove((List<IMyTreeNode>) (Object) childNode.getChildren(), selectedBlock );
-//        } 
+
     }
     
-    private List<TreeNode> nestList = new ArrayList<>();
-    Map<TreeNode, Double> structureMap = new HashMap<>();
+    private List<IMyTreeNode> nestList = new ArrayList<>();
+    Map<IMyTreeNode, Double> structureMap = new HashMap<>();
     //Map<TreeNode, TreeNode> hierarchyMap = new LinkedHashMap<>();
     
-    ArrayList<Nest> hierarchyList = new ArrayList<>();
+    //ArrayList<Nest> hierarchyList = new ArrayList<>();
     int level = 0;
     public List<Foo> blockList = new ArrayList<>();
     
     public void showHierarchy()
     {
-        getNestedChildren1( (List<IMyTreeNode>) (Object) getRoot2().getChildren() );
+        tryNewObjects();
+        RequestContext context = RequestContext.getCurrentInstance();
+        context.execute("PF('viewClassVar').show();");
+        //getNestedChildren1( (List<IMyTreeNode>) (Object) getRoot2().getChildren() );
     }
     
     List<String> finalBlockHierarchy = new ArrayList<>();
-    List<NodeRelationship> blockHierarchy = new ArrayList<>();
+    public static List<NodeRelationship> blockHierarchy = new ArrayList<>();
+
+    public List<NodeRelationship> getBlockHierarchy() {
+        return blockHierarchy;
+    }
     
     public void getNestedChildren1( List<IMyTreeNode> nodesList )
     {
-//        Gson gson = new Gson();
-//        String json = gson.toJson( node );
-//        JsonClassParser.parseJsonClass( json );
+
+        //ArrayList<IMyTreeNode> allNodes = new ArrayList<>();
         
-        ArrayList<IMyTreeNode> allNodes = new ArrayList<>();
-        
+        //sets up the blockList
         for(IMyTreeNode treeNode: nodesList)
         {
             //allNodes.add(treeNode);
@@ -714,12 +1306,13 @@ public class BlockBean implements Serializable
         }
         
         formatBlockList( blockList );
-        blockList.clear();
+        //blockList.clear();
 
-        //
+        //blockHierarchy, blockList
+        tryNewObjects();
+        //createClass( blockHierarchy );
         
-        createClass( blockHierarchy );
-        blockHierarchy.clear();
+        //blockHierarchy.clear();
       
     }
     
@@ -871,7 +1464,7 @@ public class BlockBean implements Serializable
             else if (parent.getBlockID() == lastParentBlock.getBlockID())
             {
                 //method == method so method has if and else if
-                count--;
+                //count--;
                 if(dash.length() > 1)
                 {
                     dash = dash.substring(0, dash.length()-1);
@@ -936,7 +1529,7 @@ public class BlockBean implements Serializable
         iMyTreeNode.getHierarchy().clear();                 
     }
     
-    private void createClass(  List<NodeRelationship> blockList)
+    private void createClass(  List<NodeRelationship> blockList )
     {
         System.out.println("PRINTING HIERARCHY LIST");
         
@@ -948,6 +1541,7 @@ public class BlockBean implements Serializable
         int currentHierarchyLevel = 0;
         IMyTreeNode lastMethodNode = null;
         int lastLogicLevel = -1;
+        int lastHierarchyLevelDiff = 0;
         boolean insideLogic = false;
         String tabs = "";
         String methodTabs = "\t";
@@ -964,16 +1558,18 @@ public class BlockBean implements Serializable
            
             currentHierarchyLevel = s.getHierarchyLevel();
             currentHierarchyLevel++;
+
             tabs = "";
             for(int i = 0; i < currentHierarchyLevel; i++)
             {
                 tabs += "\t";
             }
             
-            System.out.println("level: " + currentHierarchyLevel);
-            System.out.println("tabs: " + tabs);
+            //System.out.println("level: " + currentHierarchyLevel);
+            //System.out.println("tabs: " + tabs);
             
-            //if brace logic
+            
+            //if brace logic //here is where bracket closes because sout becomes lvel 2 instead of 3
             if(lastLogicLevel != -1)
             {
                 if(lastLogicLevel >= currentHierarchyLevel)
@@ -1077,6 +1673,9 @@ public class BlockBean implements Serializable
                 }
             } 
             
+            //missing end brace if nesting if statements
+            
+            
             if(s.getNode().getBlockType().equals( Type.METHOD ))
             {
                 lastMethodNode = s.getNode();
@@ -1092,10 +1691,128 @@ public class BlockBean implements Serializable
         
         //end class
         strBuilder.append( "\n}\n" );
-        System.out.println( strBuilder.toString() );
+        //System.out.println( strBuilder.toString() );
     }
     
-    public String getAccessor(String accessor)
+    Method newMethodObj = new Method();
+    Variable newVariableObj = new Variable();
+    //Method methodCopy = null;
+    List<Block> blocks = new ArrayList<>();
+    List<Method> methods = new ArrayList<>();
+    List<Variable> globalVariables = new ArrayList<>();
+    
+    //List<NodeRelationship> blockHierarchy, List<Foo> blockList
+    public void tryNewObjects(  )
+    {
+
+        if( getRoot2().getChildren().get(0).equals(item0) )
+        {
+            output = null; //wont render the pop up box so show a new error dialog
+            FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Error" , "Please drag blocks to start");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+        else
+        {
+            System.out.println("CHILDREN-----------");
+            for(IMyTreeNode foo: (List<IMyTreeNode>)(Object) getRoot2().getChildren())
+            {
+                System.out.println(foo.getData().toString());
+                System.out.println(foo.getBlockType());
+
+                //make sure the object passed is not refrenced once passed to list so no overwriting occurs
+                if( foo.getBlockType().equals( Type.VARIABLE ) )
+                {
+                    //global variable
+                    //pass a global variable list also
+                    newVariableObj.setVariableName(foo.getName());
+                    newVariableObj.setVariableType(foo.getReturnType());
+                    newVariableObj.setVariableAccess(foo.getAccessorType());
+                    newVariableObj.setVariableValue(foo.getValue());
+
+                    globalVariables.add(newVariableObj);
+
+                    newVariableObj = new Variable();
+                }
+                else if( foo.getBlockType().equals( Type.METHOD ) )
+                {
+                    //these variables are getting overwritten when a new method is created
+                    newMethodObj.setMethodAccess( foo.getAccessorType() );//methodAccessorType);
+                    System.out.println("METHOD ACCESS: " + foo.getAccessorType());
+                    newMethodObj.setMethodName( foo.getName() );//methodName);
+                    newMethodObj.setMethodReturnType( foo.getReturnType() );//methodReturnType);
+                    newMethodObj.setMethodArgs( foo.getArguments() );
+
+                    //initial children will be top level items such as methods, nothing else will show until you get children
+                    getAllHierarchy(foo.getChildren());
+
+                    ArrayList blockListCopy = new ArrayList(blocks);
+                    newMethodObj.setBlocksList(blockListCopy);
+                    blocks.clear();
+
+                    //add methods to list
+                    // methodCopy = Method.copy(newMethodObj);
+                    methods.add(newMethodObj);
+
+                    //methodCopy = new Method();
+                    newMethodObj = new Method();
+                }
+                else if( foo.getBlockType().equals( Type.MAIN ) )
+                {
+                    List<Argument> tempArgs = new ArrayList<>();
+                    tempArgs.add(new Argument("String[]","args"));
+                    ArrayList argsListCopy = new ArrayList(tempArgs);
+
+                    newMethodObj.setMethodAccess( "public static" );//methodAccessorType);
+                    //System.out.println("METHOD ACCESS: " + foo.getAccessorType());
+                    newMethodObj.setMethodName( "main" );//methodName);
+                    newMethodObj.setMethodReturnType( "void" );//methodReturnType);
+                    newMethodObj.setMethodArgs( argsListCopy );
+
+                    //initial children will be top level items such as methods, nothing else will show until you get children
+                    getAllHierarchy(foo.getChildren());
+
+                    ArrayList blockListCopy = new ArrayList(blocks);
+                    newMethodObj.setBlocksList(blockListCopy);
+                    blocks.clear();
+
+                    //add methods to list
+                    // methodCopy = Method.copy(newMethodObj);
+                    methods.add(newMethodObj);
+
+                    //methodCopy = new Method();
+                    newMethodObj = new Method();
+                    tempArgs.clear();
+                }
+            }
+
+            //create class 
+            ClassCreator cc = new ClassCreator();
+
+            ArrayList methodListCopy = new ArrayList(methods);
+            ArrayList variableListCopy = new ArrayList(globalVariables);
+
+
+            output = cc.createClass(className, methodListCopy, variableListCopy);
+
+
+            methods.clear();
+            globalVariables.clear();
+
+        }
+    }
+    
+    public void getAllHierarchy( List<TreeNode> list )
+    {
+        for( IMyTreeNode m: (List<IMyTreeNode>)(Object) list )
+        {
+            System.out.println(m + " - " + m.getBlockType());
+            
+            blocks.add(new Block(m));
+            //getAllHierarchy(m.getChildren());
+        }
+    }
+    
+    public static String getAccessor(String accessor)
     {
         if(accessor.equals("+"))
         {
@@ -1110,7 +1827,8 @@ public class BlockBean implements Serializable
             return "protected";
         }
         
-        return null;
+        
+        return "public";
     }
     
     private Object checkType( final IMyTreeNode block )
@@ -1212,39 +1930,6 @@ public class BlockBean implements Serializable
         }
     }
     
-    private class Method
-    {
-        private String methodAccess;
-        private String methodReturnType;
-        private String methodName;
-        private Map<String, Variable> methodArgs;
-        
-        private List<Logic> methodLogic;
-        private List<Loop> methodLoop;
-        private List<Variable> methodVariable;
-
-        public Method(String methodAccess, String methodReturnType, String methodName, Map<String, Variable> methodArgs) 
-        {
-            this.methodAccess = methodAccess;
-            this.methodReturnType = methodReturnType;
-            this.methodName = methodName;
-            this.methodArgs = methodArgs;
-        }
-
-        public void setMethodLogic(List<Logic> methodLogic) {
-            this.methodLogic = methodLogic;
-        }
-
-        public void setMethodLoop(List<Loop> methodLoop) {
-            this.methodLoop = methodLoop;
-        }
-
-        public void setMethodVariable(List<Variable> methodVariable) {
-            this.methodVariable = methodVariable;
-        }                
-    }
-    
-    
     private class Loop
     {
         private String loopType;
@@ -1285,24 +1970,7 @@ public class BlockBean implements Serializable
         
         
     }
-    
-    private class Variable
-    {
-        private String variableAccess;
-        private String variableType;
-        private String variableName;
-        private String variableValue;
 
-        public Variable(String variableAccess, String variableType, String variableName, String variableValue) 
-        {
-            this.variableAccess = variableAccess;
-            this.variableType = variableType;
-            this.variableName = variableName;
-            this.variableValue = variableValue;
-        }        
-    }
-    
-    
     private class Clazz
     {
         private String classAccess = "public";

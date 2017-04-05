@@ -11,178 +11,311 @@
     <!--http://www.primefaces.org/showcase/ui/data/tree/dragdrop.xhtml-->
     <!--This site contains the basic code for showing how to start with drag and drop and treenodes within the primefaces framework-->
     <h:body>
-        <!--get css styles-->
-        <h:outputStylesheet library="css" name="style.css"/>
-        
-        <!--        use this id to reference the form to refresh        -->
-        <h:form id="form">
-            <p:growl id="msgs" showDetail="true" />
+        <div class="container">
+            <!--get css styles-->
+            <h:outputStylesheet library="css" name="style.css"/>
 
-            <!--value is the root meaning the elements listed from the blockbean, the event listener handles the drag and drop-->
-            <h:panelGrid columns="6">
-                <p:tree id="tree1" value="#{blockBean.root1}" var="node" selectionMode="single" selection="#{blockBean.selectedNode1}"
-                        draggable="true" droppable="true" dragdropScope="demo">
-                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
-                    <p:treeNode>
-                        <h:outputText value="#{node}" /> <!--node is the variable above var="node"-->
-                    </p:treeNode>
-                </p:tree>
+            <!--        use this id to reference the form to refresh        -->
+            <h:form id="form">
+                <p:growl id="msgs" showDetail="true" />
 
-<!--                <p:tree id="tree2" value="{blockBean.root2}" var="node" selectionMode="single" selection="{blockBean.selectedNode2}"
-                        draggable="true" droppable="true" dragdropScope="demo">
-                    <p:ajax event="dragdrop" listener="{blockBean.onDragDrop}" update=":form:msgs" />
-                    <p:treeNode>
-                        <h:outputText value="{node}" />
-                    </p:treeNode>
-                </p:tree>-->
-                
+                <!--value is the root meaning the elements listed from the blockbean, the event listener handles the drag and drop-->
+                <h:panelGrid styleClass="override" columns="14">
+<!--                    <h:panelGroup>
+                        <h3>Nodes</h3>
+                        <p:tree id="tree1" styleClass="box" value="{blockBean.root1}" var="node" selectionMode="single" selection="{blockBean.selectedNode1}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText styleClass="" value="{node}" /> node is the variable above var="node"
+                            </p:treeNode>
+                        </p:tree>
+                    </h:panelGroup>-->
 
-                <!--add a new tree set for my custom elements-->
-                <p:tree id="tree3" value="#{blockBean.root3}" var="node" selectionMode="single" selection="#{blockBean.selectedNode3}"
-                        draggable="true" droppable="true" dragdropScope="demo">
-                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
-                    <p:treeNode>
-                        <h:outputText value="#{node}" />
-                    </p:treeNode>
-                </p:tree>
-                
-                <!--add a new tree set for my custom elements-->
-                <p:tree id="tree4" value="#{blockBean.root4}" var="node" selectionMode="single" selection="#{blockBean.selectedNode4}"
-                        draggable="true" droppable="true" dragdropScope="demo">
-                    <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
-                    <p:treeNode>
-                        <h:outputText value="#{node}" />
-                    </p:treeNode>
-                </p:tree>
-                
-                <h:panelGroup>
                     <!--add a new tree set for my custom elements-->
-                    <h3>Your Methods:</h3>
-                    <p:tree id="tree5" value="#{blockBean.root5}" var="node" selectionMode="single" selection="#{blockBean.selectedNode5}"
-                            draggable="true" droppable="true" dragdropScope="demo">
-                        <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
-                        <p:treeNode>
-                            <h:outputText value="#{node}" />
-                        </p:treeNode>
-                    </p:tree>
-               </h:panelGroup>
-                
-            </h:panelGrid>
-            
-            <!--save button-->
-            <h:commandButton actionListener="#{blockBean.showHierarchy()}" value="Show Class" />
-            <!--save button-->
-            <h:commandButton actionListener="#{blockBean.showMe()}" value="Show Me" />
-            
-            <p:tabView styleClass="tabView">
-                <p:tab id="myTab" title="#{blockBean.className}">
-                    <h:panelGrid columns="2" cellpadding="10">
-                        <p:tree id="tree2" styleClass="newJava" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
-                                draggable="true" droppable="true" dragdropScope="demo" >
+                    <h:panelGroup>
+                        <h3>Logic</h3>
+                        <p:tree id="tree3" styleClass="box" value="#{blockBean.root3}" var="node" selectionMode="single" selection="#{blockBean.selectedNode3}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs"/>
+                            <p:treeNode>
+                                <h:outputText styleClass="logic" value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </h:panelGroup>
+
+                    <!--add a new tree set for my custom elements-->
+                    <h:panelGroup>
+                        <h3>Loops</h3>
+                        <p:tree id="tree4" styleClass="box" value="#{blockBean.root4}" var="node" selectionMode="single" selection="#{blockBean.selectedNode4}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText styleClass="loops" value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </h:panelGroup>
+
+                    <!--root7 TEXT-->
+                    <h:panelGroup>
+                        <!--add a new tree set for my custom elements-->
+                        <h3>Text</h3>
+                        <p:tree id="tree7" styleClass="box" value="#{blockBean.root7}" var="node" selectionMode="single" selection="#{blockBean.selectedNode7}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText styleClass="text" value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                   </h:panelGroup>
+
+                    <!--root8 METHODS-->
+                    <h:panelGroup>
+                        <!--add a new tree set for my custom elements-->
+                        <h3>Methods</h3>
+                        <p:tree id="tree8" styleClass="box" value="#{blockBean.root8}" var="node" selectionMode="single" selection="#{blockBean.selectedNode8}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText styleClass="methods" value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                   </h:panelGroup>
+
+                    <!--root9 VARIABLES-->
+                    <h:panelGroup>
+                        <!--add a new tree set for my custom elements-->
+                        <h3>Variables</h3>
+                        <p:tree id="tree9" styleClass="box" value="#{blockBean.root9}" var="node" selectionMode="single" selection="#{blockBean.selectedNode9}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText styleClass="variables" value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                    </h:panelGroup>
+
+                    <h:panelGroup>
+                        <!--add a new tree set for my custom elements-->
+                        <h3>Your Methods:</h3>
+                        <p:tree id="tree5" styleClass="box2" value="#{blockBean.root5}" var="node" selectionMode="single" selection="#{blockBean.selectedNode5}"
+                                draggable="true" droppable="true" dragdropScope="demo">
                             <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
                             <p:treeNode>
                                 <h:outputText value="#{node}" />
                             </p:treeNode>
                         </p:tree>
-                    </h:panelGrid>
+                   </h:panelGroup>
+
+                    <!--variables-->
+                    <h:panelGroup>
+                        <!--add a new tree set for my custom elements-->
+                        <h3>Your Variables:</h3>
+                        <p:tree id="tree6" styleClass="box2" value="#{blockBean.root6}" var="node" selectionMode="single" selection="#{blockBean.selectedNode6}"
+                                draggable="true" droppable="true" dragdropScope="demo">
+                            <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                            <p:treeNode>
+                                <h:outputText value="#{node}" />
+                            </p:treeNode>
+                        </p:tree>
+                   </h:panelGroup>
+
+                </h:panelGrid>
+
+                <br/><br/>
+                <!--generate the class button-->
+                <h:commandButton actionListener="#{blockBean.showHierarchy()}" value="Show Class" />
+                <!--testing button-->
+                <h:commandButton actionListener="#{blockBean.showMe()}" value="Show Me" />
+
+                <!--droppable area box-->
+                <p:tabView styleClass="tabView">
+                    <p:tab id="myTab" title="#{blockBean.className}">
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:tree id="tree2" styleClass="newJava" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
+                                    draggable="true" droppable="true" dragdropScope="demo">
+                                <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
+                                <p:treeNode>
+                                    <h:outputText value="#{node}" />
+                                </p:treeNode>
+                            </p:tree>
+                        </h:panelGrid>
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <h:outputText value="Enter the text you want for your edited block"/>
+                            <h:inputText value="#{blockBean.userInput}"/>
+                            <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
+                            <h:commandButton actionListener="#{blockBean.deleteSelectedBlock()}" value="Delete Selected Block"/>
+                            <!--<f:verbatim><hr style="width: 10px; height: 100px; border-left: 1px solid; border-bottom: none; border-right: none; border-top: none; float: right"/></f:verbatim>-->
+                        </h:panelGrid>
+                    </p:tab>
+                    <p:tab title="Untitled1">
+                        <h:panelGrid columns="1" cellpadding="5">
+                            <h:outputText value="Francis Ford Coppola's legendary..." /> <!--put this as an embedded treenode tag --> 
+                        </h:panelGrid>
+                    </p:tab>
+
+                </p:tabView>
+
+                <p:dialog header="Method Setup" widgetVar="methodDialogVar" minHeight="40">
                     <h:panelGrid columns="2" cellpadding="10">
-                        <h:outputText value="Enter the text you want for your edited block"/>
-                        <h:inputText value="#{blockBean.userInput}"/>
-                        <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
-                        <h:commandButton actionListener="#{blockBean.deleteSelectedBlock()}" value="Delete Selected Block"/>
-                        <!--<f:verbatim><hr style="width: 10px; height: 100px; border-left: 1px solid; border-bottom: none; border-right: none; border-top: none; float: right"/></f:verbatim>-->
-                    </h:panelGrid>
-                </p:tab>
-                <p:tab title="Untitled1">
-                    <h:panelGrid columns="1" cellpadding="5">
-                        <h:outputText value="Francis Ford Coppola's legendary..." /> <!--put this as an embedded treenode tag --> 
-                    </h:panelGrid>
-                </p:tab>
-                
-            </p:tabView>
-            
-            <p:dialog header="Method Setup" widgetVar="methodDialogVar" minHeight="40">
-                <h:panelGrid columns="2" cellpadding="10">
-                    <h:outputText value="Enter method name:" />
-                    <h:inputText value="#{blockBean.methodName}"/>
+                        <h:outputText value="Enter method name:" />
+                        <h:inputText value="#{blockBean.methodName}"/>
 
-                    <p:outputLabel for="accessor" value="Accessor Type:" />
-                    <p:selectOneButton id="accessor" value="#{blockBean.methodAccessorType}">
-                        <f:selectItem itemLabel="Public" itemValue="+" />
-                        <f:selectItem itemLabel="Private" itemValue="-" />
-                        <f:selectItem itemLabel="Protected" itemValue="#" />
-                    </p:selectOneButton>
-                    
-                    <p:outputLabel for="returnType" value="Return Type:" />
-                    <p:selectOneButton id="returnType" value="#{blockBean.methodReturnType}">
-                        <f:selectItem itemLabel="String" itemValue="String" />
-                        <f:selectItem itemLabel="Boolean" itemValue="boolean" />
-                        <f:selectItem itemLabel="Double" itemValue="double" />
-                        <f:selectItem itemLabel="Integer" itemValue="int" />
-                        <f:selectItem itemLabel="Void" itemValue="void" />
-                    </p:selectOneButton>
+                        <p:outputLabel for="accessor" value="Accessor Type:" />
+                        <p:selectOneButton id="accessor" value="#{blockBean.methodAccessorType}">
+                            <f:selectItem itemLabel="Public" itemValue="+" />
+                            <f:selectItem itemLabel="Private" itemValue="-" />
+                            <f:selectItem itemLabel="Protected" itemValue="#" />
+                        </p:selectOneButton>
 
-                    <p:outputLabel for="arguments" value="Arguments:" />
-                    <h:panelGrid columns="4">
-<!--                    <h:panelGroup>-->
-                        <p:selectOneMenu id="arguments" value="#{blockBean.argumentType}" style="margin-right:13px">
-                            <f:selectItem itemLabel="Select A Type" itemValue="" />
+                        <p:outputLabel for="returnType" value="Return Type:" />
+                        <p:selectOneButton id="returnType" value="#{blockBean.methodReturnType}">
                             <f:selectItem itemLabel="String" itemValue="String" />
                             <f:selectItem itemLabel="Boolean" itemValue="boolean" />
                             <f:selectItem itemLabel="Double" itemValue="double" />
                             <f:selectItem itemLabel="Integer" itemValue="int" />
-                        </p:selectOneMenu>
+                            <f:selectItem itemLabel="Void" itemValue="void" />
+                        </p:selectOneButton>
 
-                        <h:inputText id="waterMark" value="#{blockBean.argumentValue}" style="margin-right:13px"/>
-                        <p:commandButton id="addArgs" actionListener="#{blockBean.addArgument()}" icon="ui-icon-plusthick" style="height:27px" />
-<!--                    </h:panelGroup>-->
+                        <p:outputLabel for="arguments" value="Arguments:" />
+                        <h:panelGrid columns="4">
+    <!--                    <h:panelGroup>-->
+                            <p:selectOneMenu id="arguments" value="#{blockBean.argumentType}" style="margin-right:13px">
+                                <f:selectItem itemLabel="Select A Type" itemValue="" />
+                                <f:selectItem itemLabel="String" itemValue="String" />
+                                <f:selectItem itemLabel="Boolean" itemValue="boolean" />
+                                <f:selectItem itemLabel="Double" itemValue="double" />
+                                <f:selectItem itemLabel="Integer" itemValue="int" />
+                            </p:selectOneMenu>
+
+                            <h:inputText id="waterMark" value="#{blockBean.argumentValue}" style="margin-right:13px"/>
+                            <p:commandButton id="addArgs" actionListener="#{blockBean.addArgument()}" icon="ui-icon-plusthick" style="height:27px" />
+    <!--                    </h:panelGroup>-->
+                        </h:panelGrid>
+
+                        <p:watermark for="waterMark" value="Enter argument name" id="watermark" /><!--placeholder text inside a box-->
+                        <p:tooltip for="addArgs" value="Add this argument"/>
+
                     </h:panelGrid>
-                    
-                    <p:watermark for="waterMark" value="Enter argument name" id="watermark" />
-                    <p:tooltip for="addArgs" value="Add this argument"/>
 
-                </h:panelGrid>
+                    <h:panelGrid columns="1">
+                        <p:outputLabel value="To add an entered argument, click the plus icon on the right." />
+                        <p:outputLabel value="To add another just change the information and click the plus icon again." />
+                    </h:panelGrid>
+
+                    <h:commandButton actionListener="#{blockBean.editMethod()}" value="OK"/>
+                </p:dialog>
+
+                <!-- handle initial class name -->
+                <p:dialog header="Welcome" closable="false" widgetVar="classDialogVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        <h:outputText value="Enter Class Name:" />
+                        <h:inputText value="#{blockBean.className}"/>
+
+                        <p:commandButton actionListener="#{blockBean.printClassName()}" value="Submit"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:dialog header="Arguments" widgetVar="argsDlg" minHeight="40">
+                    <h:outputText value="Your Argument Was Successfully Added!" />
+                </p:dialog>
+
+                <p:dialog header="Method Argument Edit" widgetVar="methodCallDialogVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        <h:outputText value="Enter method parameter values:" />
+                        <h:inputText value="#{blockBean.methodParams}"/>
+                        <h:outputText value="Seperate each parameter value entered by a comma(,)." />
+
+                        <p:commandButton actionListener="#{blockBean.editMethodCall()}" value="Submit"/>
+                    </h:panelGrid>
+                </p:dialog>
                 
-                <h:panelGrid columns="1">
-                    <p:outputLabel value="To add an entered argument, click the plus icon on the right." />
-                    <p:outputLabel value="To add another just change the information and click the plus icon again." />
-                </h:panelGrid>
+                <p:dialog header="ForI Edit" widgetVar="forIDialogVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        
+                        <!--<h:outputText value="Enter for loop parameter values:" />-->
 
-                <h:commandButton actionListener="#{blockBean.editMethod()}" value="OK"/>
-            </p:dialog>
-            
-            <!-- handle initial class name -->
-            <p:dialog header="Welcome" widgetVar="classDialogVar" minHeight="40">
-                <h:panelGrid columns="1" cellpadding="10">
-                    <h:outputText value="Enter Class Name:" />
-                    <h:inputText value="#{blockBean.className}"/>
-                    
-                    <p:commandButton actionListener="#{blockBean.printClassName()}" value="Submit"/>
-                </h:panelGrid>
-            </p:dialog>
-            
-            <p:dialog header="Arguments" widgetVar="argsDlg" minHeight="40">
-                <h:outputText value="Your Argument Was Successfully Added!" />
-            </p:dialog>
- 
-            <p:dialog header="Method Argument Edit" widgetVar="methodCallDialogVar" minHeight="40">
-                <h:panelGrid columns="1" cellpadding="10">
-                    <h:outputText value="Enter method parameter values:" />
-                    <h:inputText value="#{blockBean.methodParams}"/>
-                    <h:outputText value="Seperate each parameter value entered by a comma(,)." />
-                    
-                    <p:commandButton actionListener="#{blockBean.editMethodCall()}" value="Submit"/>
-                </h:panelGrid>
-            </p:dialog>
-            
-            <p:dialog header="Error" widgetVar="duplicateMethodVar" minHeight="40">
-                <h:panelGrid columns="1" cellpadding="10">
-                    <h:outputText value="This method has already been created." />
-                    <h:outputText value="Please delete the block and try again." />
-                </h:panelGrid>
-            </p:dialog>
-            
-        </h:form>
+                        <p:outputLabel for="initialI" value="Enter initial i value:" />
+                        <h:inputText id="initialI" value="#{blockBean.forIInitial}"/>
+                        
+                        <p:outputLabel for="conditionI" value="Enter condition(using i):" />
+                        <h:inputText id="conditionI" value="#{blockBean.forICondition}"/>
+                        
+                        <p:outputLabel for="incrementType" value="Enter how you want to increment i:" />
+                        <!--button here for condition ++, minus minus, +=, if += then add box to say the number to add by-->
+                        <p:selectOneButton id="incrementType" value="#{blockBean.forIIncrement}">
+                            <f:selectItem itemLabel="Plus 1 (++)" itemValue="++" />
+                            <f:selectItem itemLabel="Minus 1 (--)" itemValue="--" />
+                            <f:selectItem itemLabel="Plus any amount (+=)" itemValue="+=" />
+                            <!--<f:ajax render="forplusminus" />-->
+                        </p:selectOneButton>
+
+                        <p:outputLabel for="forplusminus" style="font-weight:bold" value="Enter the value you wish to increment but only if you selected (+=):" />
+                        <h:inputText id="forplusminus" value="#{blockBean.forIIncrementValue}" />
+                        <!--<h:outputText value="Seperate each parameter value entered by a comma(,)." />-->
+
+                        <p:commandButton actionListener="#{blockBean.editForILoop()}" value="Submit"/>
+                    </h:panelGrid>
+                </p:dialog>
+
+                <p:dialog header="Error" widgetVar="duplicateMethodVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        <h:outputText value="Sorry but this method has already been created." />
+                    </h:panelGrid>
+                </p:dialog>
+                
+                <p:dialog header="Error" widgetVar="duplicateVariableVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        <h:outputText value="Sorry but this variable has already been created." />
+                    </h:panelGrid>
+                </p:dialog>
+
+                <!--test generate input fields on button click-->
+                <p:dialog id="testDialog" header="Test" widgetVar="TestVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+
+                         <ui:repeat value="#{blockBean.values}" var="value">
+                             <h:inputText value="#{testValue}" />
+                             <br />
+                         </ui:repeat>
+                        <h:commandButton value="Extend">
+                            <!--<p:ajax listener="{blockBean.extend()}" process="@form" update=":form:testDialog" />-->
+                            <f:ajax listener="#{blockBean.extend()}" execute="@form" render="testDialog"/>
+                        </h:commandButton>
+
+                    </h:panelGrid>
+                </p:dialog>
+
+
+                <p:dialog header="Variable Setup" widgetVar="variableDialogVar" minHeight="40">
+                    <h:panelGrid columns="2" cellpadding="10">
+                        <h:outputText value="Enter variable name:" />
+                        <h:inputText value="#{blockBean.variableName}"/>
+
+                        <p:outputLabel for="returnType2" value="Return Type:" />
+                        <p:selectOneButton id="returnType2" value="#{blockBean.variableReturnType}">
+                            <f:selectItem itemLabel="String" itemValue="String" />
+                            <f:selectItem itemLabel="Boolean" itemValue="boolean" />
+                            <f:selectItem itemLabel="Double" itemValue="double" />
+                            <f:selectItem itemLabel="Integer" itemValue="int" />
+                        </p:selectOneButton>
+
+                        <h:outputText value="Enter variable value:" />
+                        <h:inputText value="#{blockBean.variableValue}"/>
+
+                    </h:panelGrid>
+
+                    <h:commandButton actionListener="#{blockBean.editVariable()}" value="OK"/>
+                </p:dialog>
+                
+                <!--test generate input fields on button click-->
+                <p:dialog id="classGenerated" rendered="#{blockBean.output != null}" header="Class" widgetVar="viewClassVar" minHeight="40">
+                    <h:outputText value="#{blockBean.output}" escape="false"/>
+                </p:dialog>
+
+
+            </h:form>
+        </div>
     </h:body>
 </html>
 

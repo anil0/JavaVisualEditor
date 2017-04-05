@@ -43,4 +43,15 @@ public interface IMyTreeNode extends TreeNode {
     
     void setReturnType(String returnType);
     
+    //List<IMyTreeNode> getAllChildren();
+    
+    //void setIMyTreeNodeParent(IMyTreeNode tn);
+
+    void setValue(String variableValue);
+    
+    String getValue();
+    
+    void setName(String name);
+
+    String getName();
 }
