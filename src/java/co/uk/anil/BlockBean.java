@@ -172,7 +172,7 @@ public class BlockBean implements Serializable
         
         //TEXT
         root7 = new MyTreeNodeImpl("Root7", null);
-        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root7, Type.PRINT);
+        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "print( )", root7, Type.PRINT);
         
         //METHODS
         root8 = new MyTreeNodeImpl("Root8", null);
@@ -619,38 +619,38 @@ public class BlockBean implements Serializable
            else if( dragNode2.getBlockType().equals( Type.ELSEIF ) )
            {
                //if else if is dragged on check to see if the tree contains an if, if it doesnt then delete the else if
-                Iterator<IMyTreeNode> treeNodes1 = (Iterator<IMyTreeNode>)(Object)dropNode2.getChildren().iterator();
-                whileBreak:
-                while (treeNodes1.hasNext()) 
-                {
-                   
-                   IMyTreeNode treeNode1 = treeNodes1.next(); 
-                   //IMyTreeNode selectedBlock1 = (IMyTreeNode) getSelectedNode2();
-
-                    System.out.println("treeNode: " + treeNode1);
-                    System.out.println("drop: " + dropNode2);
-                    
-                   //if there is no if in the entire list
-                   if(!treeNode1.equals(item0)) //because item0 doesnt have a type
-                   {
-                       if(treeNode1.getBlockType().equals( Type.IF ))
-                       {
-                           System.out.println("~CONTAINS IF");
-                           containsIf = true;
-                           break whileBreak;
-                       }
-                   }
-
-                }
-                
-                if(!containsIf) //if there is no if, delete the else if
-                {
-                    deleteDraggedBlock();
-                    containsIf = false;
-                }
-                
-                refreshRoots(); // refresh initial drag list so you can re drag that element
-                RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+//                Iterator<IMyTreeNode> treeNodes1 = (Iterator<IMyTreeNode>)(Object)dropNode2.getChildren().iterator();
+//                whileBreak:
+//                while (treeNodes1.hasNext()) 
+//                {
+//                   
+//                   IMyTreeNode treeNode1 = treeNodes1.next(); 
+//                   //IMyTreeNode selectedBlock1 = (IMyTreeNode) getSelectedNode2();
+//
+//                    System.out.println("treeNode: " + treeNode1);
+//                    System.out.println("drop: " + dropNode2);
+//                    
+//                   //if there is no if in the entire list
+//                   if(!treeNode1.equals(item0)) //because item0 doesnt have a type
+//                   {
+//                       if(treeNode1.getBlockType().equals( Type.IF ))
+//                       {
+//                           System.out.println("~CONTAINS IF");
+//                           containsIf = true;
+//                           break whileBreak;
+//                       }
+//                   }
+//
+//                }
+//                
+//                if(!containsIf) //if there is no if, delete the else if
+//                {
+//                    deleteDraggedBlock();
+//                    containsIf = false;
+//                }
+//                
+//                refreshRoots(); // refresh initial drag list so you can re drag that element
+//                RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
            }
            else if( dragNode2.getBlockType().equals( Type.FOR ) )
            {
@@ -735,7 +735,7 @@ public class BlockBean implements Serializable
         
         //TEXT
         root7 = new MyTreeNodeImpl("Root7", null);
-        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "Print Line", root7, Type.PRINT);
+        IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "print( )", root7, Type.PRINT);
         
         //METHODS
         root8 = new MyTreeNodeImpl("Root8", null);
