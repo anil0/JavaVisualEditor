@@ -23,9 +23,12 @@ public enum Type
     VARIABLECALL,
     OBJECT,
     METHOD,
+    RETURN,
     DEFAULT,
     STATEMENT,
     PRINT,
     MAIN,
-    METHODCALL
+    METHODCALL,
+    PLACEHOLDER,
+    ROOT
 }

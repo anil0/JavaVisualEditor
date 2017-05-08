@@ -68,6 +68,7 @@ class ClassCreator
             {
                 //sb.append(methodTabs);
                 sb.append( BlockBean.getAccessor( method.getMethodAccess()) != null ? BlockBean.getAccessor( method.getMethodAccess()) : "public" ).append(" ");
+                sb.append("static").append(" ");
                 sb.append( method.getMethodReturnType() ).append(" ");
                 sb.append( method.getMethodName() );//.append("()\n");
             }
@@ -144,7 +145,7 @@ class ClassCreator
                             .substring(block.getBlock().getData().toString()
                                     .indexOf("(")+1,block.getBlock().getData().toString()
                                             .indexOf(")")).trim();
-                    sb.append("System.out.println( \"").append(parsedBetweenParentheses).append("\" )").append(";\n");
+                    sb.append("System.out.println( ").append(parsedBetweenParentheses).append(" )").append(";\n");
                     
                     //get all children of the inner block such as everything within an if block
                     if(block.getBlock().getChildCount() > 0)
@@ -163,6 +164,18 @@ class ClassCreator
                     }
                     
                     sb.append("}\n");
+                }
+                else if(block.getBlock().getBlockType().equals( Type.METHODCALL ))
+                {
+                    sb.append(block.getBlock().getData()).append(";");
+                    
+                    //get all children of the inner block such as everything within an if block
+                    if(block.getBlock().getChildCount() > 0)
+                    {
+                        getAllHierarchy(block.getBlock().getChildren(), block.getBlock().getChildren());          
+                    }
+                    
+                    sb.append("\n");
                 }
                 
             }
@@ -263,7 +276,7 @@ class ClassCreator
                             .substring(m.getData().toString()
                                     .indexOf("(")+1,m.getData().toString()
                                             .indexOf(")")).trim();
-                sb.append("System.out.println( \"").append(parsedBetweenParentheses).append("\" )").append(";\n");
+                sb.append("System.out.println( ").append(parsedBetweenParentheses).append(" )").append(";\n");
 
                 getAllHierarchy(m.getChildren(), methodBlocks);
             }

@@ -120,6 +120,9 @@ public class BlockBean implements Serializable
     @PostConstruct
     public void init() 
     {
+        RequestContext requestContext = RequestContext.getCurrentInstance();  
+        requestContext.execute("introJs().start();");
+        //introJs().start();
         //getInstance();
         values.add("");
 //        root1 = new MyTreeNodeImpl("Root", null);
@@ -130,11 +133,11 @@ public class BlockBean implements Serializable
 
 //        TreeNode node00 = new MyTreeNodeImpl("Node 0.0", node0); //this becomes child of node0 meaning indented list
         //The drop area
-        root2 = new MyTreeNodeImpl("Root2", null);
+        root2 = new MyTreeNodeImpl(System.nanoTime(), "Root2", null, Type.ROOT);
         //TreeNode item0 = new MyTreeNodeImpl(null, root2);
-        item0 = new MyTreeNodeImpl("class HelloWorld", root2);
-        item01 = new MyTreeNodeImpl("public static void main( String args[] ) ", item0);
-        item02 = new MyTreeNodeImpl("System.out.println( \"Hello World!\" )", item0);
+        item0 = new MyTreeNodeImpl(System.nanoTime(), "class HelloWorld", root2 , Type.PLACEHOLDER);
+        item01 = new MyTreeNodeImpl(System.nanoTime(), "public static void main( String args[] ) ", item0, Type.PLACEHOLDER);
+        item02 = new MyTreeNodeImpl(System.nanoTime(), "System.out.println( \"Hello World!\" )", item0, Type.PLACEHOLDER);
         item0.setExpanded( true );
         
         //creating a seperate root for my own custom elements
@@ -173,6 +176,7 @@ public class BlockBean implements Serializable
         //TEXT
         root7 = new MyTreeNodeImpl("Root7", null);
         IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "print( )", root7, Type.PRINT);
+        IMyTreeNode returnStatement = new MyTreeNodeImpl(System.nanoTime(), "return", root7, Type.RETURN);
         
         //METHODS
         root8 = new MyTreeNodeImpl("Root8", null);
@@ -499,8 +503,15 @@ public class BlockBean implements Serializable
     public void setForICharacter(String forICharacter) {
         this.forICharacter = forICharacter;
     }
-    
-    
+    String i = ".";
+    public void addToList(String s)
+    {
+        //System.out.println("testValue: " + testValue);
+        //System.out.println("s: " + s);
+        values.add(i);
+        i += ".";
+        showMe();
+    }
 
     public void extend()
     {
@@ -513,20 +524,43 @@ public class BlockBean implements Serializable
         showMe();
     }
     
+    public void removeFromList(String s)
+    {
+        values.remove(s);
+        showMe();
+    }
+    
     public void printClassName()
     {
         System.out.println("class name: " + className);
         RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
     }
+    
+    private TreeDragDropEvent ourEvent;
 
     public void onDragDrop(TreeDragDropEvent event) 
     {       
+        refreshRoots();
+        RequestContext.getCurrentInstance().update("form");
+                
+        if( ((IMyTreeNode) event.getDropNode()).getBlockType().equals( Type.PLACEHOLDER ) )
+        {
+            ourEvent = new TreeDragDropEvent( event.getComponent(), event.getBehavior(), event.getDragNode(), getRoot2(), 0  );
+                    getRoot2().getChildren().add(event.getDragNode());
+        }
+        else
+        {
+            ourEvent = null;
+        }
+
         System.out.println("started");
         //TreeNode dragNode = event.getDragNode();
         //TreeNode dropNode = event.getDropNode();
         dragNode2 = (IMyTreeNode) event.getDragNode();
         dropNode2 = (IMyTreeNode) event.getDropNode();
         int dropIndex = event.getDropIndex();
+        
+        
         
 //        if(dragNode2.getBlockType().equals(Type.IF))
 //        {
@@ -561,7 +595,7 @@ public class BlockBean implements Serializable
            // Use isLeaf() method to check doesn't have childs.
            TreeNode treeNode = treeNodes.next(); 
            IMyTreeNode selectedBlock = (IMyTreeNode) getSelectedNode2();
-           
+                    
            if( treeNode.equals(item0) ) //when the first element is dragged remove the placeholder example
            {
                 final String item01 = "item01";
@@ -569,10 +603,15 @@ public class BlockBean implements Serializable
 
                 System.out.println("true item0 deleted");
                 treeNodes.remove();
+                refreshRoots();
+                RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
+                
+                onDragDrop(ourEvent == null ? event : ourEvent);
+                
+               // refreshRoots(); // refresh initial drag list so you can re drag that element
+               // RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
            }
-           
-            
-           
+
            //handling the dragged elements setup dialog calls
            if( dragNode2.getBlockType().equals( Type.METHOD ) )//if method
            {
@@ -581,7 +620,6 @@ public class BlockBean implements Serializable
                    System.out.println("its the main");
                    dragNode2.setReturnType("main");
                    //deleteMainBlock(); //do if check on refresh to say is deleted if yes then show it if it was dragged on screen dont showit 
-                   
                }
                else
                {
@@ -589,13 +627,8 @@ public class BlockBean implements Serializable
                    updateMethod(dragNode2);
 
                    tempRoot2 = getRoot2(); //make copy of root2
-                   
-                   
-                   
                    //root2 = null; //empty root2
-
                }
-                
            }
            else if( dragNode2.getBlockType().equals( Type.MAIN ) )
            {
@@ -605,8 +638,7 @@ public class BlockBean implements Serializable
                    System.out.println("main method not in root2 deleteeeee---------------------------------------");
                    deleteDraggedBlock();
                    break;
-               }
-                
+               }  
            }
            else if( dragNode2.getBlockType().equals( Type.METHODCALL ) ) //type of method call
            {
@@ -658,17 +690,17 @@ public class BlockBean implements Serializable
            }
         }
         
-        RequestContext.getCurrentInstance().update("form");
+        //RequestContext.getCurrentInstance().update("form");
         //if box is empty
         if(getRoot2().getChildCount() == 0)
         {
             refreshRoot2();
         }
         
-        FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Dragged " + dragNode2.getData(), "Dropped on " + dropNode2.getData() + " at " + dropIndex);
-        FacesContext.getCurrentInstance().addMessage(null, message);
+        //FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Dragged " + dragNode2.getData(), "Dropped on " + dropNode2.getData() + " at " + dropIndex);
+        //FacesContext.getCurrentInstance().addMessage(null, message);
 
-        refreshRoots(); // refresh initial drag list so you can re drag that element
+        //refreshRoots(); // refresh initial drag list so you can re drag that element
         RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
 
     }
@@ -736,6 +768,7 @@ public class BlockBean implements Serializable
         //TEXT
         root7 = new MyTreeNodeImpl("Root7", null);
         IMyTreeNode print = new MyTreeNodeImpl(System.nanoTime(), "print( )", root7, Type.PRINT);
+        IMyTreeNode returnStatement = new MyTreeNodeImpl(System.nanoTime(), "return", root7, Type.RETURN);
         
         //METHODS
         root8 = new MyTreeNodeImpl("Root8", null);
@@ -749,11 +782,11 @@ public class BlockBean implements Serializable
     
     public void refreshRoot2()
     {
-        root2 = new MyTreeNodeImpl("Root2", null);
+        root2 = new MyTreeNodeImpl(System.nanoTime(), "Root2", null, Type.ROOT);
         //TreeNode item0 = new MyTreeNodeImpl(null, root2);
-        IMyTreeNode item0 = new MyTreeNodeImpl("class HelloWorld", root2);
-        IMyTreeNode item01 = new MyTreeNodeImpl("public static void main( String args[] ) ",  item0);
-        IMyTreeNode item02 = new MyTreeNodeImpl("System.out.println( \"Hello World!\" )",  item0);
+        item0 = new MyTreeNodeImpl(System.nanoTime(), "class HelloWorld", root2 , Type.PLACEHOLDER);
+        item01 = new MyTreeNodeImpl(System.nanoTime(), "public static void main( String args[] ) ", item0, Type.PLACEHOLDER);
+        item02 = new MyTreeNodeImpl(System.nanoTime(), "System.out.println( \"Hello World!\" )", item0, Type.PLACEHOLDER);
         item0.setExpanded( true );
     }
     
@@ -768,6 +801,18 @@ public class BlockBean implements Serializable
         if( node.equals( "Node 0" ) )
         {
             return "test";
+        }
+        else if( node.equals( "class HelloWorld" ) )
+        {
+            return "placeholder";
+        }
+        else if( node.equals( "public static void main( String args[] ) " ) )
+        {
+            return "placeholder";
+        }
+        else if( node.equals( "System.out.println( \"Hello World!\" )" ) )
+        {
+            return "placeholder";
         }
         
         return "";
@@ -1027,6 +1072,22 @@ public class BlockBean implements Serializable
         }   
     }
 
+    public void editSelectedBlockCall()
+    {
+        IMyTreeNode editedBLock = (IMyTreeNode) getSelectedNode2();
+        
+        if(editedBLock.getBlockType().equals( Type.METHODCALL ))
+        {
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.execute("PF('methodCallDialogVar').show();");
+        }
+        else
+        {
+            RequestContext context = RequestContext.getCurrentInstance();
+            context.execute("PF('editTextDialogVar').show();"); 
+        }
+    }
+    
     public void editSelectedBlock()
     {
         if(getSelectedNode2() != null)
@@ -1068,6 +1129,7 @@ public class BlockBean implements Serializable
                     System.out.println("Method name: " + methodName);
                     //editedBLock.updateNode(className);
                 }
+                
 
                 RequestContext.getCurrentInstance().update("form"); // update tree from reloading form
                 //tests to see whether user input is valid and also valid for the type of block
@@ -1234,7 +1296,7 @@ public class BlockBean implements Serializable
                 }
                 
             }
-           
+
            getAllChildrenRemove((List<IMyTreeNode>) (Object) treeNode.getChildren(), selectedBlock ); //get all children and repeat
            
         }
@@ -1305,7 +1367,7 @@ public class BlockBean implements Serializable
             getAllChildren( (List<IMyTreeNode>) (Object) treeNode.getChildren() );
         }
         
-        formatBlockList( blockList );
+        //formatBlockList( blockList );
         //blockList.clear();
 
         //blockHierarchy, blockList

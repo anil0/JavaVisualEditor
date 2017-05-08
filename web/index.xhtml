@@ -14,6 +14,8 @@
         <div class="container">
             <!--get css styles-->
             <h:outputStylesheet library="css" name="style.css"/>
+            <h:outputStylesheet library="css" name="introjs.css"/>
+            <h:outputScript library="js" name="intro.js"/>
 
             <!--        use this id to reference the form to refresh        -->
             <h:form id="form">
@@ -33,8 +35,10 @@
                     </h:panelGroup>-->
 
                     <!--add a new tree set for my custom elements-->
+                    
+                    
                     <h:panelGroup>
-                        <h3>Logic</h3>
+                        <h3 data-intro='These top categories contain your blocks. You can drag them to the drop location below.'>Logic</h3>
                         <p:tree id="tree3" styleClass="box" value="#{blockBean.root3}" var="node" selectionMode="single" selection="#{blockBean.selectedNode3}"
                                 draggable="true" droppable="true" dragdropScope="demo">
                             <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs"/>
@@ -97,7 +101,7 @@
 
                     <h:panelGroup>
                         <!--add a new tree set for my custom elements-->
-                        <h3>Your Methods:</h3>
+                        <h3 data-intro='These two boxes that start with "your", are added to once you drag a method/variable block'>Your Methods:</h3>
                         <p:tree id="tree5" styleClass="box2" value="#{blockBean.root5}" var="node" selectionMode="single" selection="#{blockBean.selectedNode5}"
                                 draggable="true" droppable="true" dragdropScope="demo">
                             <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
@@ -124,26 +128,32 @@
 
                 <br/><br/>
                 <!--generate the class button-->
-                <h:commandButton actionListener="#{blockBean.showHierarchy()}" value="Show Class" />
+                <p data-intro='The show class button generates the class once blocks have been dragged.'></p>
+                <h:commandButton styleClass="btn" actionListener="#{blockBean.showHierarchy()}" value="Show Class" />
+                
                 <!--testing button-->
-                <h:commandButton actionListener="#{blockBean.showMe()}" value="Show Me" />
+                <!--<h:commandButton actionListener="{blockBean.showMe()}" value="Show Me" />-->
 
                 <!--droppable area box-->
+                <br/><br/>
+                
                 <p:tabView styleClass="tabView">
                     <p:tab id="myTab" title="#{blockBean.className}">
                         <h:panelGrid columns="2" cellpadding="10">
+                            <p data-intro='This is the drop zone. You will be taking blocks from above and placing them here.'></p>
+                            <p data-intro='The drop zone contains some example blocks. To start just drag a block you would like onto the example.'></p>
                             <p:tree id="tree2" styleClass="newJava" value="#{blockBean.root2}" var="node" selectionMode="single" selection="#{blockBean.selectedNode2}"
                                     draggable="true" droppable="true" dragdropScope="demo">
                                 <p:ajax event="dragdrop" listener="#{blockBean.onDragDrop}" update=":form:msgs" />
                                 <p:treeNode>
-                                    <h:outputText value="#{node}" />
+                                    <h:outputText styleClass="#{blockBean.checkTypeForCss(node)}" value="#{node}" />
                                 </p:treeNode>
                             </p:tree>
                         </h:panelGrid>
                         <h:panelGrid columns="2" cellpadding="10">
-                            <h:outputText value="Enter the text you want for your edited block"/>
-                            <h:inputText value="#{blockBean.userInput}"/>
-                            <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Edit Selected Block"/>
+                            <p data-intro='Select a block from the drop area and click this button to make a change to its text.'></p>
+                            <h:commandButton actionListener="#{blockBean.editSelectedBlockCall()}" value="Edit Selected Block"/>
+                            <p data-intro='Select a block from the drop area and click this button to delete that block.'></p>
                             <h:commandButton actionListener="#{blockBean.deleteSelectedBlock()}" value="Delete Selected Block"/>
                             <!--<f:verbatim><hr style="width: 10px; height: 100px; border-left: 1px solid; border-bottom: none; border-right: none; border-top: none; float: right"/></f:verbatim>-->
                         </h:panelGrid>
@@ -155,6 +165,14 @@
                     </p:tab>
 
                 </p:tabView>
+                
+                <p:dialog header="Edit Text" widgetVar="editTextDialogVar" minHeight="40">
+                    <h:panelGrid columns="1" cellpadding="10">
+                        <h:outputText value="Enter the text you want for your edited block"/>
+                        <h:inputText value="#{blockBean.userInput}"/>
+                        <h:commandButton actionListener="#{blockBean.editSelectedBlock()}" value="Save Changes"/>
+                    </h:panelGrid>
+                </p:dialog>
 
                 <p:dialog header="Method Setup" widgetVar="methodDialogVar" minHeight="40">
                     <h:panelGrid columns="2" cellpadding="10">
@@ -274,13 +292,17 @@
                 <p:dialog id="testDialog" header="Test" widgetVar="TestVar" minHeight="40">
                     <h:panelGrid columns="1" cellpadding="10">
 
-                         <ui:repeat value="#{blockBean.values}" var="value">
-                             <h:inputText value="#{testValue}" />
+<!--                         <ui:repeat value="{blockBean.values}" var="value">
+                             <h:inputText value="{value}" />
                              <br />
-                         </ui:repeat>
+                         </ui:repeat>-->
+                        <h:dataTable value="#{blockBean.values}" var="value">
+                            <h:column><h:inputText value="#{value}" /></h:column>
+                            <h:column><h:commandButton value="remove" actionListener="#{blockBean.removeFromList(value)}" /></h:column>
+                        </h:dataTable>
                         <h:commandButton value="Extend">
                             <!--<p:ajax listener="{blockBean.extend()}" process="@form" update=":form:testDialog" />-->
-                            <f:ajax listener="#{blockBean.extend()}" execute="@form" render="testDialog"/>
+                            <f:ajax listener="#{blockBean.addToList(value)}" execute="@form" render="testDialog"/>
                         </h:commandButton>
 
                     </h:panelGrid>
